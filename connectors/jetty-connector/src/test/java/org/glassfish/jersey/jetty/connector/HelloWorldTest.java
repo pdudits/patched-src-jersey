@@ -95,7 +95,6 @@ public class HelloWorldTest extends JerseyTest {
 
     @Override
     protected void configureClient(ClientConfig config) {
-        config.property(ClientProperties.ASYNC_THREADPOOL_SIZE, 20);
         config.connectorProvider(new JettyConnectorProvider());
     }
 

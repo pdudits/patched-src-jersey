@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-
+// Portions Copyright [2018] Payara Foundation and/or affiliates
 package org.glassfish.jersey.ext.cdi1x.servlet.internal;
 
 import java.lang.annotation.Annotation;
@@ -81,7 +81,7 @@ public class CdiExternalRequestScopeExtension implements Extension {
      */
     private void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscoveryEvent, final BeanManager beanManager) {
         requestScopeType = beanManager.createAnnotatedType(CdiExternalRequestScope.class);
-        beforeBeanDiscoveryEvent.addAnnotatedType(requestScopeType);
+        beforeBeanDiscoveryEvent.addAnnotatedType(requestScopeType, "Jersey " + CdiExternalRequestScope.class.getName());
     }
 
     /**
