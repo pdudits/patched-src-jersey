@@ -37,6 +37,8 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+
 package org.glassfish.jersey.client;
 
 import java.util.Arrays;
@@ -77,6 +79,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook {
 
     private final Stage<ClientRequest> requestProcessingRoot;
     private final Stage<ClientResponse> responseProcessingRoot;
+    private final Stage<ClientResponse> responseExceptionMapperProcessingRoot;
 
     private final Connector connector;
     private final ClientConfig config;
@@ -106,6 +109,11 @@ class ClientRuntime implements JerseyClient.ShutdownHook {
         final ChainableStage<ClientResponse> responseFilteringStage = ClientFilteringStages.createResponseFilteringStage(locator);
         this.responseProcessingRoot = responseFilteringStage != null
                 ? responseFilteringStage : Stages.<ClientResponse>identity();
+
+        ChainableStage<ClientResponse> responseExceptionMapperStage
+                = ResponseExceptionMappingStages.createResponseExceptionMappingStage(locator);
+        this.responseExceptionMapperProcessingRoot = responseExceptionMapperStage != null
+                ? responseExceptionMapperStage : Stages.<ClientResponse>identity();
 
         this.config = config;
         this.connector = connector;
@@ -254,7 +262,8 @@ class ClientRuntime implements JerseyClient.ShutdownHook {
                 response = aborted.getAbortResponse();
             }
 
-            return Stages.process(response, responseProcessingRoot);
+            ClientResponse processedResponse = Stages.process(response, responseProcessingRoot);
+            return Stages.process(processedResponse, responseExceptionMapperProcessingRoot);
         } catch (final ProcessingException pe) {
             throw pe;
         } catch (final Throwable t) {

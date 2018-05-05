@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.internal.inject;
 
@@ -111,6 +112,7 @@ public final class Providers {
 
         interfaces.put(javax.ws.rs.client.ClientResponseFilter.class, ProviderRuntime.CLIENT);
         interfaces.put(javax.ws.rs.client.ClientRequestFilter.class, ProviderRuntime.CLIENT);
+        interfaces.put(org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper.class, ProviderRuntime.CLIENT);
 
         return interfaces;
     }

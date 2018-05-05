@@ -40,6 +40,8 @@
     holder.
 
 -->
+<!-- Portions Copyright [2018] [Payara Foundation and/or its affiliates] -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -1358,6 +1360,24 @@
             </dependency>
 
             <dependency>
+                <groupId>javax.json</groupId>
+                <artifactId>javax.json-api</artifactId>
+                <version>${jsonp.api.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.eclipse.microprofile.rest.client</groupId>
+                <artifactId>microprofile-rest-client-api</artifactId>
+                <version>${microprofile.rest.client.api.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>${microprofile.config.api.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
@@ -1848,6 +1868,21 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>eclipse.microprofile</id>
+            <name>Eclipse MicroProfile Repository</name>
+            <url>https://repo.eclipse.org/content/groups/microprofile/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+
     <properties>
         <findbugs.skip>false</findbugs.skip>
         <findbugs.threshold>Low</findbugs.threshold>
@@ -1911,6 +1946,8 @@
         <jaxb.ri.version>2.2.7</jaxb.ri.version>
         <jaxrs.api.spec.version>2.0</jaxrs.api.spec.version>
         <jaxrs.api.impl.version>2.0.1</jaxrs.api.impl.version>
+        <microprofile.rest.client.api.version>1.0</microprofile.rest.client.api.version>
+        <microprofile.config.api.version>1.1</microprofile.config.api.version>
         <jboss.logging.version>3.3.0.Final</jboss.logging.version>
         <jersey1.version>1.19.3</jersey1.version>
         <jersey1.last.final.version>${jersey1.version}</jersey1.last.final.version>
@@ -1922,6 +1959,7 @@
         <jmockit.version>1.18</jmockit.version>
         <jsonp.ri.version>1.0.4</jsonp.ri.version>
         <jsonp.jaxrs.version>1.0</jsonp.jaxrs.version>
+        <jsonp.api.version>1.1</jsonp.api.version>
         <jsp.version>2.0</jsp.version>
         <jstl.version>1.2</jstl.version>
         <jta.api.version>1.2</jta.api.version>
