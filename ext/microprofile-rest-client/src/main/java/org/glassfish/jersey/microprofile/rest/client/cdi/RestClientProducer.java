@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
@@ -38,7 +39,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.AnnotationLiteral;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import static org.glassfish.jersey.microprofile.rest.client.Constant.REST_URI_FORMAT;
+import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 
 public class RestClientProducer extends AbstractBeanProducer {
 
@@ -67,9 +68,10 @@ public class RestClientProducer extends AbstractBeanProducer {
 
     @Override
     public Object create(CreationalContext<Object> creationalContext) {
-        return RestClientBuilder
+        return RestClientBuilderResolver
+                .instance()
                 .newBuilder()
-                .baseUri(getBaseUri())
+                .baseUrl(getBaseUrl())
                 .build(beanClass);
     }
 
@@ -77,31 +79,19 @@ public class RestClientProducer extends AbstractBeanProducer {
     public void destroy(Object instance, CreationalContext<Object> creationalContext) {
     }
 
-    private URI getBaseUri() {
-        String uriProperty = String.format(REST_URI_FORMAT, getName());
-        Optional<String> baseUri = ConfigController.getOptionalValue(uriProperty);
-        if (!baseUri.isPresent()) {
-            String urlProperty = String.format(REST_URL_FORMAT, getName());
-            Optional<String> baseUrl = ConfigController.getOptionalValue(urlProperty);
-            if (!baseUrl.isPresent()) {
-                throw new IllegalArgumentException(
-                        String.format("Rest Client [%s] url not found in configuration", beanClass)
-                );
-            } else {
-                try {
-                    return new URL(baseUrl.get()).toURI();
-                } catch (MalformedURLException | URISyntaxException ex) {
-                    throw new IllegalArgumentException(
-                            String.format("Rest Client [%s] url is invalid [%s] ", beanClass, baseUri), ex
-                    );
-                }
-            }
+    private URL getBaseUrl() {
+        String urlProperty = String.format(REST_URL_FORMAT, getName());
+        String baseUrl = ConfigController.getValue(urlProperty);
+        if (baseUrl == null) {
+            throw new IllegalArgumentException(
+                    String.format("Rest Client [%s] url not found in configuration", beanClass)
+            );
         } else {
             try {
-                return new URI(baseUri.get());
-            } catch (URISyntaxException ex) {
+                return new URL(baseUrl);
+            } catch (MalformedURLException ex) {
                 throw new IllegalArgumentException(
-                        String.format("Rest Client [%s] uri is invalid [%s] ", beanClass, baseUri), ex
+                        String.format("Rest Client [%s] url is invalid [%s] ", beanClass, baseUrl), ex
                 );
             }
         }
@@ -110,19 +100,27 @@ public class RestClientProducer extends AbstractBeanProducer {
     private Class<? extends Annotation> findScope() {
 
         String scopeProperty = String.format(REST_SCOPE_FORMAT, getName());
-        Optional<String> configuredScope = ConfigController.getOptionalValue(scopeProperty);
-        if (configuredScope.isPresent()) {
+        String configuredScope = ConfigController.getValue(scopeProperty);
+        if (configuredScope != null) {
             try {
-                PrivilegedAction<ClassLoader> action = () -> Thread.currentThread().getContextClassLoader();
+                PrivilegedAction<ClassLoader> action = new PrivilegedAction() {
+                    public Object run() {
+                        return Thread.currentThread().getContextClassLoader();
+                    }
+                };
                 ClassLoader classLoader = AccessController.doPrivileged(action);
                 if (classLoader == null) {
-                    action = () -> this.getClass().getClassLoader();
+                    action = new PrivilegedAction() {
+                        public Object run() {
+                            return RestClientProducer.this.getClass().getClassLoader();
+                        }
+                    };
                     classLoader = AccessController.doPrivileged(action);
                 }
-                return (Class<? extends Annotation>) Class.forName(configuredScope.get(), true, classLoader);
+                return (Class<? extends Annotation>) Class.forName(configuredScope, true, classLoader);
             } catch (ClassNotFoundException ex) {
                 throw new IllegalArgumentException(
-                        String.format("Rest Client [%s] scope is invalid [%s] ", beanClass, configuredScope.get()), ex
+                        String.format("Rest Client [%s] scope is invalid [%s] ", beanClass, configuredScope), ex
                 );
             }
         }

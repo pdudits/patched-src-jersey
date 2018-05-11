@@ -31,7 +31,6 @@ import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEF
 import org.glassfish.jersey.microprofile.rest.client.config.ConfigController;
 import static java.lang.Boolean.FALSE;
 import java.net.URI;
-import java.util.concurrent.ExecutorService;
 import org.glassfish.jersey.client.JerseyClient;
 
 public class RestClientBuilderImpl implements RestClientBuilder {
@@ -53,21 +52,6 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                     String.format("Rest Client url is invalid [%s] ", url), ex
             );
         }
-        return this;
-    }
-
-    @Override
-    public RestClientBuilder baseUri(URI uri) {
-        this.baseUri = uri;
-        return this;
-    }
-
-    @Override
-    public RestClientBuilder executorService(ExecutorService executor) {
-        if (executor == null) {
-            throw new IllegalArgumentException("ExecutorService is null");
-        }
-        clientBuilder.executorService(executor);
         return this;
     }
 
@@ -101,8 +85,8 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         if (disableDefaultExceptionMapperProp == null) {
             //check MicroProfile Config
             boolean disableDefaultExceptionMapper = ConfigController
-                    .getOptionalValue(DISABLE_DEFAULT_EXCEPTION_MAPPER, Boolean.class)
-                    .orElse(FALSE);
+                    .getValue(DISABLE_DEFAULT_EXCEPTION_MAPPER, Boolean.class, FALSE);
+
             if (!disableDefaultExceptionMapper) {
                 register(DefaultResponseExceptionMapper.class);
             }

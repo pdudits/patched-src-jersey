@@ -28,9 +28,9 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 public class RestClientCDIExtension implements Extension {
 
-    private final Set<Class<?>> validRestClientClasses = new LinkedHashSet<>();
+    private final Set<Class<?>> validRestClientClasses = new LinkedHashSet<Class<?>>();
 
-    private final Set<Class<?>> invalidRestClientClasses = new LinkedHashSet<>();
+    private final Set<Class<?>> invalidRestClientClasses = new LinkedHashSet<Class<?>>();
 
     public void registerClient(
                     @Observes
@@ -46,16 +46,19 @@ public class RestClientCDIExtension implements Extension {
     }
 
     public void createProxy(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        validRestClientClasses.stream()
-                .map(restClient -> new RestClientProducer(restClient, beanManager))
-                .forEach(afterBeanDiscovery::addBean);
+        for(Class<?> validRestClientClass : validRestClientClasses) {
+            afterBeanDiscovery.addBean(new RestClientProducer(validRestClientClass, beanManager));
+        }
     }
 
     public void reportErrors(@Observes AfterDeploymentValidation afterDeploymentValidation) {
-        invalidRestClientClasses.stream()
-                .map(restClient -> new IllegalArgumentException(
-                String.format("Rest Client [%s] must be interface", restClient)
-        ))
-                .forEach(afterDeploymentValidation::addDeploymentProblem);
+        for (Class<?> invalidRestClientClass : invalidRestClientClasses) {
+            afterDeploymentValidation.addDeploymentProblem(
+                    new IllegalArgumentException(
+                            String.format("Rest Client [%s] must be interface",
+                            invalidRestClientClass)
+                    )
+            );
+        }
     }
 }

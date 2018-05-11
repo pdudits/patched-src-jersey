@@ -19,6 +19,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import static java.util.Collections.emptySet;
+import java.util.HashSet;
 import java.util.Set;
 import javax.enterprise.inject.spi.Bean;
 import javax.enterprise.inject.spi.BeanManager;
@@ -53,7 +54,9 @@ public abstract class AbstractBeanProducer implements Bean<Object>, PassivationC
 
     @Override
     public Set<Type> getTypes() {
-        return Collections.singleton(beanClass);
+        Set<Type> types = new HashSet<Type>();
+        types.add(beanClass);
+        return types;
     }
 
     @Override

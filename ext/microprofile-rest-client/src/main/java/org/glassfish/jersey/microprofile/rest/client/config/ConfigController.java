@@ -15,7 +15,7 @@
  */
 package org.glassfish.jersey.microprofile.rest.client.config;
 
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 
@@ -35,22 +35,19 @@ public final class ConfigController {
         return config;
     }
 
-    public static Optional<String> getOptionalValue(String propertyName) {
-        return getOptionalValue(propertyName, String.class);
-    }
-
-    public static <T> Optional<T> getOptionalValue(String propertyName, Class<T> clazz) {
-        Config config = getConfig();
-        return config != null ? config.getOptionalValue(propertyName, clazz) : Optional.empty();
-    }
-
     public static String getValue(String propertyName) {
-        return getValue(propertyName, String.class);
+        return getValue(propertyName, String.class, null);
     }
 
-    public static <T> T getValue(String propertyName, Class<T> clazz) {
+    public static <T> T getValue(String propertyName, Class<T> clazz, T defaultValue) {
         Config config = getConfig();
-        return config != null ? config.getValue(propertyName, clazz) : null;
+        T value;
+        try {
+            value = config.getValue(propertyName, clazz);
+        } catch (Exception ex) {
+            value = defaultValue;
+        }
+        return value;
     }
 
 }
