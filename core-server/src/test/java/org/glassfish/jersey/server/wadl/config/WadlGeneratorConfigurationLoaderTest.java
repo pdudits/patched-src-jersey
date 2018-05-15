@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.wadl.config;
 
@@ -48,7 +49,7 @@ import javax.ws.rs.core.MediaType;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.TestInjectionManagerFactory;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.wadl.WadlGenerator;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;

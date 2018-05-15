@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.internal.inject;
 
@@ -50,7 +51,7 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ParamException;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 
 /**
  * Value supplier provider supporting the {@link QueryParam &#64;QueryParam} injection annotation.

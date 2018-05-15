@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.filter;
 
@@ -57,7 +58,7 @@ import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.server.model.AnnotatedMethod;
+import org.glassfish.jersey.model.AnnotatedMethod;
 
 /**
  * A {@link DynamicFeature} supporting the {@code javax.annotation.security.RolesAllowed},

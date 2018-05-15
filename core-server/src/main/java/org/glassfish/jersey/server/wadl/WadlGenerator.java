@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.wadl;
 
@@ -51,7 +52,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;
 
 import com.sun.research.ws.wadl.Application;

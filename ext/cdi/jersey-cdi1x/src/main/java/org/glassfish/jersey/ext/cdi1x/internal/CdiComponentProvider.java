@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.ext.cdi1x.internal;
 
@@ -105,7 +106,7 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;

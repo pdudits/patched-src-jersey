@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.internal.inject;
 
@@ -56,7 +57,7 @@ import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**

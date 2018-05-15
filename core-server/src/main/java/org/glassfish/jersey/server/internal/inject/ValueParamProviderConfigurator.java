@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.internal.inject;
 
@@ -70,7 +71,7 @@ import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ServerBootstrapBag;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 import org.glassfish.jersey.server.AsyncContext;
 import org.glassfish.jersey.server.internal.process.RequestProcessingContextReference;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;

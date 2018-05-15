@@ -37,16 +37,15 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.server.model;
+package org.glassfish.jersey.model;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.List;
-
 import javax.ws.rs.PathParam;
-
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

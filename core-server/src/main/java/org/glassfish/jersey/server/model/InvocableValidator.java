@@ -37,9 +37,11 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.model;
 
+import org.glassfish.jersey.model.Parameter;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;

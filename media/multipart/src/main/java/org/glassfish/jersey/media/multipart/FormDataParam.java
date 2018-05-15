@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.media.multipart;
 
@@ -48,8 +49,7 @@ import java.lang.annotation.Target;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.server.model.ParamQualifier;
+import org.glassfish.jersey.model.ParamQualifier;
 
 /**
  * Binds the named body part(s) of a "multipart/form-data" request
