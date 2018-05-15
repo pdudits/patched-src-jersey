@@ -37,8 +37,9 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -56,10 +57,9 @@ import javax.ws.rs.ext.ParamConverterProvider;
 
 import javax.inject.Singleton;
 
-import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
+import org.glassfish.jersey.internal.LocalizationMessages;
 
 /**
  * Container of several different {@link ParamConverterProvider param converter providers}
@@ -70,7 +70,7 @@ import org.glassfish.jersey.server.internal.LocalizationMessages;
  * @author Marek Potociar (marek.potociar at oracle.com)
  */
 @Singleton
-class ParamConverters {
+public class ParamConverters {
 
     private abstract static class AbstractStringReader<T> implements ParamConverter<T> {
 

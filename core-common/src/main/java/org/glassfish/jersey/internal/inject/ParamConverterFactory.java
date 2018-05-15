@@ -38,7 +38,7 @@
  * holder.
  */
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -66,12 +66,14 @@ import javax.inject.Singleton;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Miroslav Fuksa
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+
 @Singleton
 public class ParamConverterFactory implements ParamConverterProvider {
 
     private final List<ParamConverterProvider> converterProviders;
 
-    ParamConverterFactory(Set<ParamConverterProvider> providers, Set<ParamConverterProvider> customProviders) {
+    public ParamConverterFactory(Set<ParamConverterProvider> providers, Set<ParamConverterProvider> customProviders) {
 
         Set<ParamConverterProvider> copyProviders = new HashSet<>(providers);
         converterProviders = new ArrayList<>();
