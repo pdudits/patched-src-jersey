@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.tests.api;
 
@@ -63,7 +64,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;

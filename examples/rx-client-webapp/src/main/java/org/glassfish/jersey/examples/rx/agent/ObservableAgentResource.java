@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.examples.rx.agent;
 
@@ -62,7 +63,7 @@ import org.glassfish.jersey.examples.rx.domain.Calculation;
 import org.glassfish.jersey.examples.rx.domain.Destination;
 import org.glassfish.jersey.examples.rx.domain.Forecast;
 import org.glassfish.jersey.examples.rx.domain.Recommendation;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 
 import rx.Observable;
 import rx.schedulers.Schedulers;

@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.examples.opentracing;
 
@@ -56,7 +57,7 @@ import javax.ws.rs.core.Response;
 import org.glassfish.jersey.opentracing.OpenTracingFeature;
 import org.glassfish.jersey.opentracing.OpenTracingUtils;
 import org.glassfish.jersey.server.ManagedAsync;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 
 import io.opentracing.Span;
 

@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.tests.e2e.server;
 
@@ -72,7 +73,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
 import org.glassfish.jersey.server.ClientBinding;
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 import org.glassfish.jersey.spi.ScheduledExecutorServiceProvider;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
