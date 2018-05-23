@@ -68,9 +68,9 @@ import org.glassfish.jersey.internal.util.collection.Value;
 import org.glassfish.jersey.internal.util.collection.Values;
 import org.glassfish.jersey.server.ClientBinding;
 import org.glassfish.jersey.server.ExtendedUriInfo;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.uri.internal.JerseyUriBuilder;
 
 import org.glassfish.hk2.api.ServiceLocator;

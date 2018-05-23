@@ -40,6 +40,7 @@
 
 package org.glassfish.jersey.server.model;
 
+import org.glassfish.jersey.model.AnnotatedMethod;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;

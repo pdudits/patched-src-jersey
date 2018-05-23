@@ -64,7 +64,7 @@ import org.glassfish.jersey.examples.rx.domain.Destination;
 import org.glassfish.jersey.examples.rx.domain.Forecast;
 import org.glassfish.jersey.examples.rx.domain.Recommendation;
 import org.glassfish.jersey.server.ManagedAsync;
-import org.glassfish.jersey.server.Uri;
+import org.glassfish.jersey.Uri;
 
 /**
  * Obtain information about visited (destination) and recommended (destination, forecast, price) places for "Async" user. Uses

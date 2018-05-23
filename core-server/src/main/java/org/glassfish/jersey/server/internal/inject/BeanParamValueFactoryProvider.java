@@ -46,7 +46,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import org.glassfish.jersey.process.internal.RequestScoped;
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;

@@ -39,7 +39,7 @@
  */
 package org.glassfish.jersey.server.internal.inject;
 
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 
 /**
  * Provider of multivalued parameter extractors.

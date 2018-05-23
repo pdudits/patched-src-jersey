@@ -40,6 +40,7 @@
 
 package org.glassfish.jersey.server.model;
 
+import org.glassfish.jersey.model.Parameter;
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;

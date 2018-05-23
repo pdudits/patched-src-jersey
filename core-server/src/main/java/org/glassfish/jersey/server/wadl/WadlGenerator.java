@@ -51,7 +51,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.model.Parameter;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;
 
 import com.sun.research.ws.wadl.Application;
