@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 package org.glassfish.jersey.server;
 
 import java.util.Map;
@@ -69,6 +70,7 @@ import org.glassfish.jersey.server.model.internal.ResourceModelBinder;
 import org.glassfish.jersey.server.spi.ContainerProvider;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.internal.inject.ParameterConverterBinder;
 
 /**
  * Server injection binder.
@@ -95,6 +97,7 @@ class ServerBinder extends AbstractBinder {
                 new JerseyErrorService.Binder(),
                 new ServerProcessingBinder(),
                 new ContextInjectionResolver.Binder(),
+                new ParameterConverterBinder(),
                 new ParameterInjectionBinder(),
                 new JerseyClassAnalyzer.Binder(),
                 new MessagingBinders.MessageBodyProviders(applicationProperties, RuntimeType.SERVER),

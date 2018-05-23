@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 package org.glassfish.jersey.server.internal.inject;
 
 import javax.ws.rs.BeanParam;
@@ -47,7 +48,6 @@ import javax.ws.rs.MatrixParam;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.Suspended;
-import javax.ws.rs.ext.ParamConverterProvider;
 
 import javax.inject.Singleton;
 
@@ -119,9 +119,6 @@ public class ParameterInjectionBinder extends AbstractBinder {
 
     @Override
     public void configure() {
-        // Param converter providers
-        bind(ParamConverters.AggregatedProvider.class).to(ParamConverterProvider.class).in(Singleton.class);
-        bindAsContract(ParamConverterFactory.class).in(Singleton.class);
 
         // Parameter injection value extractor providers
         bind(MultivaluedParameterExtractorFactory.class).to(MultivaluedParameterExtractorProvider.class).in(Singleton.class);

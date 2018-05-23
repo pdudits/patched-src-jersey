@@ -37,9 +37,11 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 package org.glassfish.jersey.server.internal.inject;
 
+import org.glassfish.jersey.internal.inject.PrimitiveMapper;
+import org.glassfish.jersey.internal.inject.ParamConverterFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

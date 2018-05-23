@@ -37,7 +37,8 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey.server.internal.inject;
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+package org.glassfish.jersey.internal.inject;
 
 import java.util.Collections;
 import java.util.Map;
@@ -50,11 +51,11 @@ import java.util.WeakHashMap;
  * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
  */
-final class PrimitiveMapper {
+public final class PrimitiveMapper {
 
-    static final Map<Class, Class> primitiveToClassMap =
+    public static final Map<Class, Class> primitiveToClassMap =
             getPrimitiveToClassMap();
-    static final Map<Class, Object> primitiveToDefaultValueMap =
+    public static final Map<Class, Object> primitiveToDefaultValueMap =
             getPrimitiveToDefaultValueMap();
 
     private static Map<Class, Class> getPrimitiveToClassMap() {

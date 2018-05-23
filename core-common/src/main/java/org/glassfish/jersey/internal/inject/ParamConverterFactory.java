@@ -37,22 +37,18 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey.server.internal.inject;
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+package org.glassfish.jersey.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import org.glassfish.jersey.internal.inject.Providers;
-
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**

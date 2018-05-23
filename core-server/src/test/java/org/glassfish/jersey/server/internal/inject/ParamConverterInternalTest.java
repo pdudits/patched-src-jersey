@@ -39,6 +39,7 @@
  */
 package org.glassfish.jersey.server.internal.inject;
 
+import org.glassfish.jersey.internal.inject.ParamConverters;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 package org.glassfish.jersey.client;
 
 import java.util.Map;
@@ -68,6 +69,7 @@ import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.internal.inject.ParameterConverterBinder;
 
 /**
  * Registers all binders necessary for {@link Client} runtime.
@@ -122,6 +124,7 @@ class ClientBinder extends AbstractBinder {
         install(new RequestScope.Binder(), // must go first as it registers the request scope instance.
                 new JerseyErrorService.Binder(),
                 new ContextInjectionResolver.Binder(),
+                new ParameterConverterBinder(),
                 new JerseyClassAnalyzer.Binder(),
                 new MessagingBinders.MessageBodyProviders(clientRuntimeProperties, RuntimeType.CLIENT),
                 new MessagingBinders.HeaderDelegateProviders(),
