@@ -46,7 +46,7 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 
 /**
- * Binder which initializes and register {@link ParameterInserterProvider} instance 
+ * Binder which initializes and register {@link ParameterInserterProvider} instance
  *
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  */
