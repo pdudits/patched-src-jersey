@@ -69,6 +69,7 @@ import org.glassfish.jersey.spi.ExecutorServiceProvider;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.client.internal.inject.ParameterInserterBinder;
 import org.glassfish.jersey.internal.inject.ParameterConverterBinder;
 
 /**
@@ -125,6 +126,7 @@ class ClientBinder extends AbstractBinder {
                 new JerseyErrorService.Binder(),
                 new ContextInjectionResolver.Binder(),
                 new ParameterConverterBinder(),
+                new ParameterInserterBinder(),
                 new JerseyClassAnalyzer.Binder(),
                 new MessagingBinders.MessageBodyProviders(clientRuntimeProperties, RuntimeType.CLIENT),
                 new MessagingBinders.HeaderDelegateProviders(),

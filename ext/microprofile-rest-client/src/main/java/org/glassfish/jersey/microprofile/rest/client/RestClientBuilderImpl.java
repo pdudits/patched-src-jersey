@@ -56,26 +56,23 @@ public class RestClientBuilderImpl implements RestClientBuilder {
     }
 
     @Override
-    public <T> T build(Class<T> restClient) throws IllegalStateException, RestClientDefinitionException {
+    public <T> T build(Class<T> restClientInterface) throws IllegalStateException, RestClientDefinitionException {
 
         // interface validity
-        RestClientValidator.getInstance().validate(restClient);
+        RestClientValidator.getInstance().validate(restClientInterface);
 
         registerDefaultExceptionMapper();
-
-        registerProviders(restClient);
+        registerProviders(restClientInterface);
+        
+        JerseyClient client = (JerseyClient) clientBuilder.build();
+        client.preInitialize();
 
         if (baseUri == null) {
             throw new IllegalStateException("Base URI or URL can't be null");
         }
 
-        Client client = clientBuilder.build();
-        if (client instanceof JerseyClient) {
-            ((JerseyClient) client).preInitialize();
-        }
         WebTarget webTarget = client.target(baseUri);
-
-        return WebResourceFactory.newResource(restClient, webTarget);
+        return WebResourceFactory.newResource(restClientInterface, webTarget);
     }
 
     private void registerDefaultExceptionMapper() {

@@ -71,7 +71,7 @@ public class ParamConverterFactory implements ParamConverterProvider {
     private final List<ParamConverterProvider> converterProviders;
 
     @Inject
-    ParamConverterFactory(ServiceLocator locator) {
+    public ParamConverterFactory(ServiceLocator locator) {
         converterProviders = new ArrayList<>();
         final Set<ParamConverterProvider> customProviders = Providers.getCustomProviders(locator, ParamConverterProvider.class);
         converterProviders.addAll(customProviders);

@@ -73,7 +73,7 @@ import org.glassfish.jersey.process.internal.Stages;
  *
  * @author Marek Potociar (marek.potociar at oracle.com)
  */
-class ClientRuntime implements JerseyClient.ShutdownHook {
+public class ClientRuntime implements JerseyClient.ShutdownHook {
 
     private static final Logger LOG = Logger.getLogger(ClientRuntime.class.getName());
 
@@ -353,7 +353,7 @@ class ClientRuntime implements JerseyClient.ShutdownHook {
      *
      * @return Service locator.
      */
-    ServiceLocator getServiceLocator() {
+    public ServiceLocator getServiceLocator() {
         return locator;
     }
 }
