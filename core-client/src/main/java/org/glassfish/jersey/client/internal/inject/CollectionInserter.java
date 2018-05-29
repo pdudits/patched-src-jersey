@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import static java.util.stream.Collectors.toList;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.ext.ParamConverter;
 import org.glassfish.jersey.client.internal.LocalizationMessages;

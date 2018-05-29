@@ -15,7 +15,6 @@
  */
 package org.glassfish.jersey.microprofile.rest.client.config;
 
-import java.util.NoSuchElementException;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 

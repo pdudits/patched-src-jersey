@@ -20,16 +20,12 @@ import static org.glassfish.jersey.microprofile.rest.client.Constant.REST_URL_FO
 import org.glassfish.jersey.microprofile.rest.client.config.ConfigController;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.ServiceLoader;
 import java.util.Set;
 import javax.enterprise.context.Dependent;
 import javax.enterprise.context.spi.CreationalContext;
@@ -37,7 +33,6 @@ import javax.enterprise.inject.Any;
 import javax.enterprise.inject.Default;
 import javax.enterprise.inject.spi.BeanManager;
 import javax.enterprise.util.AnnotationLiteral;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.eclipse.microprofile.rest.client.spi.RestClientBuilderResolver;
 

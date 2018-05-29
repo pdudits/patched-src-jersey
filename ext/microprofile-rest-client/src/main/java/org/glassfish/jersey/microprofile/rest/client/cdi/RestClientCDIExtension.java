@@ -46,7 +46,7 @@ public class RestClientCDIExtension implements Extension {
     }
 
     public void createProxy(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        for(Class<?> validRestClientClass : validRestClientClasses) {
+        for (Class<?> validRestClientClass : validRestClientClasses) {
             afterBeanDiscovery.addBean(new RestClientProducer(validRestClientClass, beanManager));
         }
     }
