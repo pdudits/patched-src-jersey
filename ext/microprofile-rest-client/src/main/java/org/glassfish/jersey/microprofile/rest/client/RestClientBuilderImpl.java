@@ -31,6 +31,7 @@ import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEF
 import org.glassfish.jersey.microprofile.rest.client.config.ConfigController;
 import static java.lang.Boolean.FALSE;
 import java.net.URI;
+import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
 import org.glassfish.jersey.client.JerseyClient;
 
 public class RestClientBuilderImpl implements RestClientBuilder {
@@ -57,20 +58,17 @@ public class RestClientBuilderImpl implements RestClientBuilder {
 
     @Override
     public <T> T build(Class<T> restClientInterface) throws IllegalStateException, RestClientDefinitionException {
+        if (baseUri == null) {
+            throw new IllegalStateException("Base URI or URL can't be null");
+        }
 
         // interface validity
         RestClientValidator.getInstance().validate(restClientInterface);
 
         registerDefaultExceptionMapper();
         registerProviders(restClientInterface);
-        
-        JerseyClient client = (JerseyClient) clientBuilder.build();
-        client.preInitialize();
 
-        if (baseUri == null) {
-            throw new IllegalStateException("Base URI or URL can't be null");
-        }
-
+        Client client =  clientBuilder.build();
         WebTarget webTarget = client.target(baseUri);
         return WebResourceFactory.newResource(restClientInterface, webTarget);
     }
