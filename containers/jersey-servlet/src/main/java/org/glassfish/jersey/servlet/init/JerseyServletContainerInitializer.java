@@ -42,6 +42,7 @@ package org.glassfish.jersey.servlet.init;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,7 @@ import org.glassfish.jersey.servlet.internal.spi.ServletContainerProvider;
 
 import jersey.repackaged.com.google.common.collect.Lists;
 import jersey.repackaged.com.google.common.collect.Maps;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 /*
  It is RECOMMENDED that implementations support the Servlet 3 framework
@@ -136,6 +138,14 @@ public final class JerseyServletContainerInitializer implements ServletContainer
         if (classes == null) {
             classes = Collections.emptySet();
         }
+        Iterator<Class<?>> classIterator = classes.iterator();
+        while (classIterator.hasNext()) {
+            Class<?> clazz = classIterator.next();
+            if (clazz.isAnnotationPresent(RegisterRestClient.class)) {
+                classIterator.remove();
+            }
+        }
+
         // PRE INIT
         for (final ServletContainerProvider servletContainerProvider : allServletContainerProviders) {
             servletContainerProvider.preInit(servletContext, classes);
