@@ -28,7 +28,7 @@ import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEFAULT_EXCEPTION_MAPPER;
-import org.glassfish.jersey.microprofile.rest.client.config.ConfigController;
+import org.glassfish.jersey.MPConfig;
 import static java.lang.Boolean.FALSE;
 import java.net.URI;
 import java.util.concurrent.ExecutorService;
@@ -93,8 +93,8 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                 .getProperty(DISABLE_DEFAULT_EXCEPTION_MAPPER);
         if (disableDefaultExceptionMapperProp == null) {
             //check MicroProfile Config
-            boolean disableDefaultExceptionMapper = ConfigController
-                    .getOptionalValue(DISABLE_DEFAULT_EXCEPTION_MAPPER, Boolean.class)
+            boolean disableDefaultExceptionMapper =
+                    MPConfig.getOptionalValue(DISABLE_DEFAULT_EXCEPTION_MAPPER, Boolean.class)
                     .orElse(FALSE);
             if (!disableDefaultExceptionMapper) {
                 register(DefaultResponseExceptionMapper.class);
