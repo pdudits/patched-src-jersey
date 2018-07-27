@@ -17,7 +17,7 @@ package org.glassfish.jersey.microprofile.rest.client.cdi;
 
 import static org.glassfish.jersey.microprofile.rest.client.Constant.REST_SCOPE_FORMAT;
 import static org.glassfish.jersey.microprofile.rest.client.Constant.REST_URL_FORMAT;
-import org.glassfish.jersey.microprofile.rest.client.config.ConfigController;
+import org.glassfish.jersey.MPConfig;
 import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -79,10 +79,10 @@ public class RestClientProducer extends AbstractBeanProducer {
 
     private URI getBaseUri() {
         String uriProperty = String.format(REST_URI_FORMAT, getName());
-        Optional<String> baseUri = ConfigController.getOptionalValue(uriProperty);
+        Optional<String> baseUri = MPConfig.getOptionalValue(uriProperty);
         if (!baseUri.isPresent()) {
             String urlProperty = String.format(REST_URL_FORMAT, getName());
-            Optional<String> baseUrl = ConfigController.getOptionalValue(urlProperty);
+            Optional<String> baseUrl = MPConfig.getOptionalValue(urlProperty);
             if (!baseUrl.isPresent()) {
                 throw new IllegalArgumentException(
                         String.format("Rest Client [%s] url not found in configuration", beanClass)
@@ -110,7 +110,7 @@ public class RestClientProducer extends AbstractBeanProducer {
     private Class<? extends Annotation> findScope() {
 
         String scopeProperty = String.format(REST_SCOPE_FORMAT, getName());
-        Optional<String> configuredScope = ConfigController.getOptionalValue(scopeProperty);
+        Optional<String> configuredScope = MPConfig.getOptionalValue(scopeProperty);
         if (configuredScope.isPresent()) {
             try {
                 PrivilegedAction<ClassLoader> action = () -> Thread.currentThread().getContextClassLoader();

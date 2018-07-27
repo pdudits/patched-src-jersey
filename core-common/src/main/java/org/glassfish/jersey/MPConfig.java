@@ -13,15 +13,15 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-package org.glassfish.jersey.microprofile.rest.client.config;
+package org.glassfish.jersey;
 
 import java.util.Optional;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 
-public final class ConfigController {
+public final class MPConfig {
 
-    private ConfigController() {
+    private MPConfig() {
     }
 
     private static Config getConfig() {

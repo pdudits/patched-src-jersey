@@ -216,6 +216,10 @@
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+        </dependency>
 
         <dependency>
             <!-- Must be declared before JUnit dependency, otherwise not visible to JUnit. -->

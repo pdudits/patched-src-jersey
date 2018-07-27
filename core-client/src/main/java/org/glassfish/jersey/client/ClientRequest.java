@@ -49,6 +49,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,6 +65,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
 import javax.ws.rs.ext.ReaderInterceptor;
 import javax.ws.rs.ext.WriterInterceptor;
+import org.glassfish.jersey.MPConfig;
 
 import org.glassfish.jersey.client.internal.LocalizationMessages;
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
@@ -188,13 +190,24 @@ public class ClientRequest extends OutboundMessageContext implements ClientReque
     }
 
     private <T> T resolveProperty(final String name, Object defaultValue, final Class<T> type) {
-        // Check runtime configuration first
+
+        // Check microprofile config first
+        try {
+            Optional<T> mpConfigValue = MPConfig.getOptionalValue(name, type);
+            if (mpConfigValue.isPresent()) {
+                defaultValue = mpConfigValue.get();
+            }
+        } catch (IllegalArgumentException iae) {
+            //type converter not available
+        }
+
+        // Check runtime configuration next
         Object result = clientConfig.getProperty(name);
         if (result != null) {
             defaultValue = result;
         }
 
-        // Check request properties next
+        // Check request properties in the end
         result = propertiesDelegate.getProperty(name);
         if (result == null) {
             result = defaultValue;
