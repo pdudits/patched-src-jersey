@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.server.validation.internal;
 
@@ -280,8 +281,9 @@ public final class ValidationBinder extends AbstractBinder {
         private ValidatorContext getDefaultValidatorContext(final ValidateOnExecutionHandler handler) {
             final ValidatorContext context = factory.usingContext();
 
-            // Default Configuration.
-            context.constraintValidatorFactory(resourceContext.getResource(InjectingConstraintValidatorFactory.class));
+            // Composite Configuration - due to PAYARA-2491
+            // https://github.com/payara/Payara/issues/2245
+            context.constraintValidatorFactory(resourceContext.getResource(CompositeInjectingConstraintValidatorFactory.class));
 
             // Traversable Resolver.
             context.traversableResolver(getTraversableResolver(factory.getTraversableResolver(), handler));

@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.ext.cdi1x.validation.internal;
 
@@ -67,7 +68,7 @@ import javax.interceptor.Interceptor;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.model.Resource;
 
-import org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor;
+import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
 
 /**
  * CDI extension to register {@link CdiInterceptorWrapper}.

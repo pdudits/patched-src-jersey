@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.ext.cdi1x.validation.internal;
 
@@ -51,8 +52,8 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
 
-import org.hibernate.validator.internal.cdi.interceptor.MethodValidated;
-import org.hibernate.validator.internal.cdi.interceptor.ValidationInterceptor;
+import org.hibernate.validator.cdi.internal.interceptor.MethodValidated;
+import org.hibernate.validator.cdi.internal.interceptor.ValidationInterceptor;
 
 /**
  * JAX-RS wrapper for Hibernate CDI bean validation interceptor.
