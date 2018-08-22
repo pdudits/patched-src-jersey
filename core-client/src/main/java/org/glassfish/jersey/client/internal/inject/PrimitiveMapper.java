@@ -38,7 +38,7 @@
  * holder.
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.client.internal.inject;
 
 import java.util.Collections;
 import java.util.Map;

@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey.model;
+package org.glassfish.jersey.server.model;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -47,7 +47,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import org.glassfish.jersey.server.internal.process.AsyncContext;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.spi.internal.ValueFactoryProvider;
 
 import org.glassfish.hk2.api.Factory;

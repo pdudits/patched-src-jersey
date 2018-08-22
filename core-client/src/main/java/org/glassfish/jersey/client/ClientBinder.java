@@ -70,7 +70,7 @@ import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.client.internal.inject.ParameterInserterBinder;
-import org.glassfish.jersey.internal.inject.ParameterConverterBinder;
+import org.glassfish.jersey.client.internal.inject.ParameterConverterBinder;
 
 /**
  * Registers all binders necessary for {@link Client} runtime.

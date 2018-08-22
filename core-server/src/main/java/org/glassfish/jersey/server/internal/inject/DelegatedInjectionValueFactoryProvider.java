@@ -50,8 +50,8 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.ContextInjectionResolver;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.process.internal.RequestScoped;
-import org.glassfish.jersey.model.Parameter;
-import org.glassfish.jersey.model.Parameter.Source;
+import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter.Source;
 import org.glassfish.jersey.server.spi.internal.ValueFactoryProvider;
 
 import org.glassfish.hk2.api.ActiveDescriptor;

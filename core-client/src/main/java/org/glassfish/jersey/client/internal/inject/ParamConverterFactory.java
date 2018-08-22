@@ -38,7 +38,7 @@
  * holder.
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.client.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -50,6 +50,7 @@ import javax.ws.rs.ext.ParamConverterProvider;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.Providers;
 
 /**
  * An aggregate {@link ParamConverterProvider param converter provider} that loads all

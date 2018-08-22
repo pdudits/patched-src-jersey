@@ -40,7 +40,6 @@
 
 package org.glassfish.jersey.server.model;
 
-import org.glassfish.jersey.model.Parameter;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;

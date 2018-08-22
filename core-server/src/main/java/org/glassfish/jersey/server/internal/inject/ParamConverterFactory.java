@@ -37,75 +37,62 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.BadRequestException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Request;
-import javax.ws.rs.core.Response;
-
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import javax.ws.rs.ext.ParamConverter;
+import javax.ws.rs.ext.ParamConverterProvider;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.server.model.Parameter;
-
-import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.Providers;
 
 /**
- * Provides injection of {@link Request} entity value or {@link Request} instance
- * itself.
+ * An aggregate {@link ParamConverterProvider param converter provider} that loads all
+ * the registered {@link ParamConverterProvider} implementations.
+ * <p />
+ * When invoked, the provider iterates through the registered implementations until
+ * it finds the first implementation that returns a non-null {@link ParamConverter param converter},
+ * which is subsequently returned from the factory. In case no non-null string reader
+ * instance is found, {@code null} is returned from the factory. {@link org.glassfish.jersey.internal.inject.Custom Custom}
+ * providers are iterated first, so that user registered providers are preferred against internal jersey providers.
  *
+ * @author Paul Sandoz
  * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Miroslav Fuksa
  */
 @Singleton
-class EntityParamValueFactoryProvider extends AbstractValueFactoryProvider {
+public class ParamConverterFactory implements ParamConverterProvider {
 
-    /**
-     * Creates new instance initialized with parameters.
-     *
-     * @param mpep     Injected multivaluedParameterExtractor provider.
-     * @param injector Injected HK2 injector.
-     */
+    private final List<ParamConverterProvider> converterProviders;
+
     @Inject
-    EntityParamValueFactoryProvider(MultivaluedParameterExtractorProvider mpep, ServiceLocator injector) {
-        super(mpep, injector, Parameter.Source.ENTITY);
-    }
+    public ParamConverterFactory(ServiceLocator locator) {
+        converterProviders = new ArrayList<>();
+        final Set<ParamConverterProvider> customProviders = Providers.getCustomProviders(locator, ParamConverterProvider.class);
+        converterProviders.addAll(customProviders);
 
-    private static class EntityValueFactory extends AbstractContainerRequestValueFactory<Object> {
+        final Set<ParamConverterProvider> providers = Providers.getProviders(locator, ParamConverterProvider.class);
+        providers.removeAll(customProviders);
+        converterProviders.addAll(providers);
 
-        private final Parameter parameter;
-
-        public EntityValueFactory(Parameter parameter) {
-            this.parameter = parameter;
-        }
-
-        @Override
-        public Object provide() {
-            final ContainerRequest requestContext = getContainerRequest();
-
-            final Class<?> rawType = parameter.getRawType();
-
-            Object value;
-            if ((Request.class.isAssignableFrom(rawType) || ContainerRequestContext.class.isAssignableFrom(rawType))
-                    && rawType.isInstance(requestContext)) {
-                value = requestContext;
-            } else {
-                value = requestContext.readEntity(rawType, parameter.getType(), parameter.getAnnotations());
-                if (rawType.isPrimitive() && value == null) {
-                    throw new BadRequestException(Response.status(Response.Status.BAD_REQUEST)
-                            .entity(LocalizationMessages.ERROR_PRIMITIVE_TYPE_NULL()).build());
-                }
-            }
-            return value;
-
-        }
     }
 
     @Override
-    protected Factory<?> createValueFactory(Parameter parameter) {
-        return new EntityValueFactory(parameter);
+    public <T> ParamConverter<T> getConverter(Class<T> rawType, Type genericType, Annotation[] annotations) {
+        for (ParamConverterProvider provider : converterProviders) {
+            @SuppressWarnings("unchecked")
+            ParamConverter<T> converter = provider.getConverter(rawType, genericType, annotations);
+            if (converter != null) {
+                return converter;
+            }
+        }
+        return null;
+
     }
 }

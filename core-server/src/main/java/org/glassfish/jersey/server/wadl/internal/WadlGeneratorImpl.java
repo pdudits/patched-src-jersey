@@ -47,7 +47,7 @@ import javax.ws.rs.core.MediaType;
 
 import javax.xml.namespace.QName;
 
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.model.ResourceMethod;
 import org.glassfish.jersey.server.wadl.WadlGenerator;
 

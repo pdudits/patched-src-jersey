@@ -37,7 +37,8 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package org.glassfish.jersey;
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+package org.glassfish.jersey.client;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

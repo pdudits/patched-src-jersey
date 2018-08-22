@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2011-2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010-2015 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -38,22 +38,59 @@
  * holder.
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.server.internal.inject;
 
-import javax.ws.rs.ext.ParamConverterProvider;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
-import javax.inject.Singleton;
+/**
+ * Utility class that maps the primitive types to their respective classes as well
+ * as the default values as defined by the JAX-RS specification.
+ *
+ * @author Paul Sandoz
+ * @author Marek Potociar (marek.potociar at oracle.com)
+ */
+public final class PrimitiveMapper {
 
-import org.glassfish.hk2.utilities.binding.AbstractBinder;
+    public static final Map<Class, Class> primitiveToClassMap =
+            getPrimitiveToClassMap();
+    public static final Map<Class, Object> primitiveToDefaultValueMap =
+            getPrimitiveToDefaultValueMap();
 
+    private static Map<Class, Class> getPrimitiveToClassMap() {
+        Map<Class, Class> m = new WeakHashMap<>();
+        // Put all primitive to wrapper class mappings except
+        // that for Character
+        m.put(Boolean.TYPE, Boolean.class);
+        m.put(Byte.TYPE, Byte.class);
+        m.put(Character.TYPE, Character.class);
+        m.put(Short.TYPE, Short.class);
+        m.put(Integer.TYPE, Integer.class);
+        m.put(Long.TYPE, Long.class);
+        m.put(Float.TYPE, Float.class);
+        m.put(Double.TYPE, Double.class);
 
-public class ParameterConverterBinder extends AbstractBinder {
+        return Collections.unmodifiableMap(m);
+    }
 
-    @Override
-    public void configure() {
-        // Param converter providers
-        bind(ParamConverters.AggregatedProvider.class).to(ParamConverterProvider.class).in(Singleton.class);
-        bindAsContract(ParamConverterFactory.class).in(Singleton.class);
+    private static Map<Class, Object> getPrimitiveToDefaultValueMap() {
+        Map<Class, Object> m = new WeakHashMap<>();
+        m.put(Boolean.class, Boolean.valueOf(false));
+        m.put(Byte.class, Byte.valueOf((byte) 0));
+        m.put(Character.class, Character.valueOf((char) 0x00));
+        m.put(Short.class, Short.valueOf((short) 0));
+        m.put(Integer.class, Integer.valueOf(0));
+        m.put(Long.class, Long.valueOf(0L));
+        m.put(Float.class, Float.valueOf(0.0f));
+        m.put(Double.class, Double.valueOf(0.0d));
 
+        return Collections.unmodifiableMap(m);
+    }
+
+    /**
+     * Prevents instantiation.
+     */
+    private PrimitiveMapper() {
     }
 }

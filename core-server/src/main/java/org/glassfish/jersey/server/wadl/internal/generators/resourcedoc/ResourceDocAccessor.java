@@ -45,7 +45,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.AnnotationDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.ClassDocType;
 import org.glassfish.jersey.server.wadl.internal.generators.resourcedoc.model.MethodDocType;

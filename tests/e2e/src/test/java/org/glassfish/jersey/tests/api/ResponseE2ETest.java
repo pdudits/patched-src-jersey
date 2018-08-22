@@ -62,7 +62,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.server.Uri;
 import org.glassfish.jersey.test.JerseyTest;
 
 import org.junit.Test;

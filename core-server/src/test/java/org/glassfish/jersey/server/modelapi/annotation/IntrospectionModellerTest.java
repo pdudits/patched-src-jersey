@@ -55,7 +55,7 @@ import javax.ws.rs.core.UriInfo;
 
 import javax.inject.Inject;
 
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.model.ResourceMethod;
 

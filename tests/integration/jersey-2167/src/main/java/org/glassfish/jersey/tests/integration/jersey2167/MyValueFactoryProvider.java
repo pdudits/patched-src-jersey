@@ -47,7 +47,7 @@ import org.glassfish.jersey.server.internal.inject.AbstractContainerRequestValue
 import org.glassfish.jersey.server.internal.inject.AbstractValueFactoryProvider;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
 import org.glassfish.jersey.server.internal.inject.ParamInjectionResolver;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 
 import org.glassfish.hk2.api.ServiceLocator;
 

@@ -41,7 +41,7 @@
 
 package org.glassfish.jersey.client.inject;
 
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.client.model.Parameter;
 
 /**
  * Provider of parameter inserter.

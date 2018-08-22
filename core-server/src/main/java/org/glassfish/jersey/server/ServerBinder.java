@@ -70,7 +70,7 @@ import org.glassfish.jersey.server.model.internal.ResourceModelBinder;
 import org.glassfish.jersey.server.spi.ContainerProvider;
 
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.internal.inject.ParameterConverterBinder;
+import org.glassfish.jersey.server.internal.inject.ParameterConverterBinder;
 
 /**
  * Server injection binder.

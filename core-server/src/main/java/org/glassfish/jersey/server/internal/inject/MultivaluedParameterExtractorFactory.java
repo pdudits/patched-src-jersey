@@ -40,8 +40,6 @@
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 package org.glassfish.jersey.server.internal.inject;
 
-import org.glassfish.jersey.internal.inject.PrimitiveMapper;
-import org.glassfish.jersey.internal.inject.ParamConverterFactory;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -60,7 +58,7 @@ import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 
 /**
  * Implementation of {@link MultivaluedParameterExtractorProvider}. For each

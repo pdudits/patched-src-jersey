@@ -70,7 +70,7 @@ import org.glassfish.jersey.examples.rx.domain.Forecast;
 import org.glassfish.jersey.examples.rx.domain.Recommendation;
 import org.glassfish.jersey.process.JerseyProcessingUncaughtExceptionHandler;
 import org.glassfish.jersey.server.ManagedAsync;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.server.Uri;
 
 import jersey.repackaged.com.google.common.util.concurrent.ThreadFactoryBuilder;
 

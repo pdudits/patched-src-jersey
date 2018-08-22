@@ -66,7 +66,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ParamException;
 import org.glassfish.jersey.server.internal.InternalServerProperties;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 
 import org.glassfish.hk2.api.ServiceLocator;
 

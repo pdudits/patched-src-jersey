@@ -51,7 +51,7 @@ import javax.ws.rs.container.Suspended;
 
 import javax.inject.Singleton;
 
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.server.Uri;
 import org.glassfish.jersey.server.spi.internal.ValueFactoryProvider;
 
 import org.glassfish.hk2.api.InjectionResolver;
@@ -106,7 +106,7 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
  * Support for {@link javax.ws.rs.container.AsyncResponse} injection as defined by the JAX-RS specification.
  * </dd>
  *
- * <dt>{@link org.glassfish.jersey.Uri @Uri}</dt>
+ * <dt>{@link org.glassfish.jersey.server.Uri @Uri}</dt>
  * <dd>
  * Jersey-specific support for {@link javax.ws.rs.client.WebTarget} injection.
  * </dd>

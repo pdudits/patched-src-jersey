@@ -38,7 +38,7 @@
  * holder.
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.client.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -60,9 +60,10 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.message.internal.HttpDateFormat;
-import org.glassfish.jersey.internal.LocalizationMessages;
+import org.glassfish.jersey.client.internal.LocalizationMessages;
 
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jersey.internal.inject.ExtractorException;
 
 /**
  * Container of several different {@link ParamConverterProvider param converter providers}

@@ -53,7 +53,7 @@ import javax.ws.rs.WebApplicationException;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.message.internal.MessageBodyProviderNotFoundException;
 import org.glassfish.jersey.server.internal.process.MappableException;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.model.Parameterized;
 
 import org.glassfish.hk2.api.Factory;

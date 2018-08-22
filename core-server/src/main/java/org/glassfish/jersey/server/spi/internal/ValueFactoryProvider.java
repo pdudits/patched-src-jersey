@@ -42,7 +42,7 @@ package org.glassfish.jersey.server.spi.internal;
 import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
 
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.spi.Contract;
 
 import org.glassfish.hk2.api.Factory;

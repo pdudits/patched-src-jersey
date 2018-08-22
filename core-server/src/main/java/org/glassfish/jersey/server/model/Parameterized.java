@@ -39,7 +39,6 @@
  */
 package org.glassfish.jersey.server.model;
 
-import org.glassfish.jersey.model.Parameter;
 import java.util.List;
 
 /**
