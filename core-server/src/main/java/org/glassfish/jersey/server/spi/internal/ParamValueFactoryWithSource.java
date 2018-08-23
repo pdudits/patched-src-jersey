@@ -45,7 +45,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 
 /**
  * Extends {@link Supplier} interface with

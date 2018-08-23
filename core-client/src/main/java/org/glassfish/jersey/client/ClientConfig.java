@@ -82,7 +82,7 @@ import org.glassfish.jersey.model.internal.CommonConfig;
 import org.glassfish.jersey.model.internal.ComponentBag;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.RequestScope;
-import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
+import org.glassfish.jersey.client.internal.inject.ParamConverterConfigurator;
 
 /**
  * Jersey externalized implementation of client-side JAX-RS {@link javax.ws.rs.core.Configurable

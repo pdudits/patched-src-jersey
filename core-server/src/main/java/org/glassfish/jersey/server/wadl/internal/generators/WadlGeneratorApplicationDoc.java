@@ -52,7 +52,7 @@ import javax.ws.rs.core.MediaType;
 import javax.inject.Provider;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.wadl.WadlGenerator;
 import org.glassfish.jersey.server.wadl.internal.ApplicationDescription;
 import org.glassfish.jersey.server.wadl.internal.WadlUtils;

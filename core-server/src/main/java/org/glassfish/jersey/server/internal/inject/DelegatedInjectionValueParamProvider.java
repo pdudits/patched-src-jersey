@@ -56,8 +56,8 @@ import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.process.internal.RequestScoped;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.model.Parameter;
-import org.glassfish.jersey.model.Parameter.Source;
+import org.glassfish.jersey.server.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter.Source;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**

@@ -41,7 +41,7 @@
 
 package org.glassfish.jersey.server.model;
 
-import org.glassfish.jersey.model.AnnotatedMethod;
+import org.glassfish.jersey.server.model.AnnotatedMethod;
 import org.junit.Test;
 
 import java.util.HashSet;

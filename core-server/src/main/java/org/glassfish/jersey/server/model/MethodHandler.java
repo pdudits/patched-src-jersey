@@ -41,7 +41,7 @@
 
 package org.glassfish.jersey.server.model;
 
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;

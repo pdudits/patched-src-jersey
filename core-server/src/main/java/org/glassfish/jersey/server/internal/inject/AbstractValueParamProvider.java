@@ -49,7 +49,7 @@ import java.util.function.Function;
 import javax.inject.Provider;
 
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**

@@ -100,7 +100,7 @@ import org.glassfish.jersey.process.internal.Stages;
 import org.glassfish.jersey.server.internal.JerseyRequestTimeoutHandler;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.ProcessingProviders;
-import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
+import org.glassfish.jersey.server.internal.inject.ParamConverterConfigurator;
 import org.glassfish.jersey.server.internal.inject.ParamExtractorConfigurator;
 import org.glassfish.jersey.server.internal.inject.ValueParamProviderConfigurator;
 import org.glassfish.jersey.server.internal.monitoring.ApplicationEventImpl;

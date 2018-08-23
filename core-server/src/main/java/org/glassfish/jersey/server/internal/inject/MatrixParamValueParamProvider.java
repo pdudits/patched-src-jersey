@@ -53,7 +53,7 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.ExtractorException;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.ParamException;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 
 /**
  * Value supplier provider supporting the {@link MatrixParam &#64;MatrixParam} injection annotation.

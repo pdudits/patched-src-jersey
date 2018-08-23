@@ -78,7 +78,7 @@ import org.glassfish.jersey.server.ContainerResponse;
 import org.glassfish.jersey.server.internal.LocalizationMessages;
 import org.glassfish.jersey.server.internal.process.RequestProcessingContext;
 import org.glassfish.jersey.server.model.Invocable;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.model.ResourceMethod;
 
 /**

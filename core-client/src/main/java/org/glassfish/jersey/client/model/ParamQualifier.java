@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2012-2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010-2017 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -39,51 +39,22 @@
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.server.internal.inject;
+package org.glassfish.jersey.client.model;
 
-import java.util.function.Function;
-
-import javax.ws.rs.container.AsyncResponse;
-
-import javax.inject.Provider;
-
-import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.AsyncContext;
-import org.glassfish.jersey.server.model.Parameter;
-import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Value factory provider supporting the {@link javax.ws.rs.container.Suspended} injection annotation.
+ * A meta-annotation that identifies an annotation as a parameter-based
+ * annotation.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Paul Sandoz
  */
-final class AsyncResponseValueParamProvider implements ValueParamProvider {
-
-    private final Provider<AsyncContext> asyncContextProvider;
-
-    /**
-     * Initialize the provider.
-     *
-     * @param asyncContextProvider async processing context provider.
-     */
-    public AsyncResponseValueParamProvider(Provider<AsyncContext> asyncContextProvider) {
-        this.asyncContextProvider = asyncContextProvider;
-    }
-
-    @Override
-    public Function<ContainerRequest, AsyncResponse> getValueProvider(final Parameter parameter) {
-        if (parameter.getSource() != Parameter.Source.SUSPENDED) {
-            return null;
-        }
-        if (!AsyncResponse.class.isAssignableFrom(parameter.getRawType())) {
-            return null;
-        }
-
-        return containerRequest -> asyncContextProvider.get();
-    }
-
-    @Override
-    public PriorityType getPriority() {
-        return Priority.NORMAL;
-    }
+@Target({ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface ParamQualifier {
 }

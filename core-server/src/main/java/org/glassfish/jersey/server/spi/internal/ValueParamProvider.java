@@ -47,7 +47,7 @@ import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
 
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.spi.Contract;
 
 /**

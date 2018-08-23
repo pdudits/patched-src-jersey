@@ -50,7 +50,7 @@ import javax.inject.Singleton;
 import org.glassfish.jersey.server.ContainerRequest;
 import org.glassfish.jersey.server.internal.inject.AbstractValueParamProvider;
 import org.glassfish.jersey.server.internal.inject.MultivaluedParameterExtractorProvider;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 
 /**
  * Custom annotation value supplier provider for JERSEY-2167 reproducer.

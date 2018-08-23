@@ -58,7 +58,7 @@ import org.glassfish.jersey.message.internal.MessageBodyFactory;
 import org.glassfish.jersey.message.internal.MessagingBinders;
 import org.glassfish.jersey.model.internal.ManagedObjectsFinalizer;
 import org.glassfish.jersey.process.internal.RequestScope;
-import org.glassfish.jersey.internal.inject.ParamConverterConfigurator;
+import org.glassfish.jersey.server.internal.inject.ParamConverterConfigurator;
 import org.glassfish.jersey.server.internal.inject.ParamExtractorConfigurator;
 import org.glassfish.jersey.server.internal.inject.ValueParamProviderConfigurator;
 import org.glassfish.jersey.server.internal.process.RequestProcessingConfigurator;

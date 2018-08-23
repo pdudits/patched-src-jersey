@@ -37,9 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-
-package org.glassfish.jersey.model;
+package org.glassfish.jersey.server.model;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -73,7 +71,7 @@ import javax.ws.rs.core.Context;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.server.Uri;
 
 /**
  * Method parameter model.

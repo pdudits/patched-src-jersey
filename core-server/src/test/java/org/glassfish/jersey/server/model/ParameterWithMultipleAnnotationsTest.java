@@ -39,8 +39,9 @@
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.model;
+package org.glassfish.jersey.server.model;
 
+import org.glassfish.jersey.server.model.Parameter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;

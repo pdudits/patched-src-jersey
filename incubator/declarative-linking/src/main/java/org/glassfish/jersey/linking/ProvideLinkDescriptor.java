@@ -50,7 +50,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Link;
 
 import org.glassfish.jersey.linking.mapping.ResourceMappingContext;
-import org.glassfish.jersey.model.AnnotatedMethod;
+import org.glassfish.jersey.server.model.AnnotatedMethod;
 import org.glassfish.jersey.server.model.ResourceMethod;
 
 /**

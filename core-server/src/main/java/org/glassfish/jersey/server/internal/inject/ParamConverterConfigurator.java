@@ -39,12 +39,15 @@
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.internal.inject;
+package org.glassfish.jersey.server.internal.inject;
 
 import javax.ws.rs.ext.ParamConverterProvider;
 
 import org.glassfish.jersey.internal.BootstrapBag;
 import org.glassfish.jersey.internal.BootstrapConfigurator;
+import org.glassfish.jersey.internal.inject.Bindings;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InstanceBinding;
 
 /**
  * Configurator which initializes and register {@link ParamConverters.AggregatedProvider} instances into {@link InjectionManager}.

@@ -50,13 +50,11 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.ext.ParamConverter;
 import javax.inject.Singleton;
 import org.glassfish.jersey.internal.inject.InserterException;
-import org.glassfish.jersey.internal.inject.ParamConverterFactory;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.internal.util.collection.ClassTypePair;
 import org.glassfish.jersey.internal.util.collection.LazyValue;
 import org.glassfish.jersey.client.internal.LocalizationMessages;
-import org.glassfish.jersey.model.Parameter;
-import org.glassfish.jersey.internal.inject.PrimitiveMapper;
+import org.glassfish.jersey.client.model.Parameter;
 import org.glassfish.jersey.client.inject.ParameterInserter;
 import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 

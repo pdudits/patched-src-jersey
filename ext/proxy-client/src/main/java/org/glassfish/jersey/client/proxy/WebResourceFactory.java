@@ -89,7 +89,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 
 import org.glassfish.jersey.internal.util.ReflectionHelper;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.client.model.Parameter;
 import org.glassfish.jersey.client.inject.ParameterInserter;
 import org.glassfish.jersey.client.inject.ParameterInserterProvider;
 

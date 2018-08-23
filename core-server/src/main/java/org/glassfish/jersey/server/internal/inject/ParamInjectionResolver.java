@@ -57,7 +57,7 @@ import org.glassfish.jersey.internal.inject.Injectee;
 import org.glassfish.jersey.internal.inject.InjectionResolver;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;
 
 /**

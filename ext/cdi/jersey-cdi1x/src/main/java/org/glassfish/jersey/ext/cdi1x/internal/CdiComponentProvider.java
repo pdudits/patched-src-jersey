@@ -106,7 +106,7 @@ import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.internal.inject.SupplierInstanceBinding;
 import org.glassfish.jersey.internal.util.collection.Cache;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.model.Parameter;
+import org.glassfish.jersey.server.model.Parameter;
 import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.internal.ValueParamProvider;

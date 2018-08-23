@@ -39,22 +39,59 @@
  */
 // Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
-package org.glassfish.jersey.model;
+package org.glassfish.jersey.server.internal.inject;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 /**
- * A meta-annotation that identifies an annotation as a parameter-based
- * annotation.
+ * Utility class that maps the primitive types to their respective classes as well
+ * as the default values as defined by the JAX-RS specification.
  *
  * @author Paul Sandoz
+ * @author Marek Potociar (marek.potociar at oracle.com)
  */
-@Target({ElementType.ANNOTATION_TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface ParamQualifier {
+public final class PrimitiveMapper {
+
+    public static final Map<Class, Class> primitiveToClassMap =
+            getPrimitiveToClassMap();
+    public static final Map<Class, Object> primitiveToDefaultValueMap =
+            getPrimitiveToDefaultValueMap();
+
+    private static Map<Class, Class> getPrimitiveToClassMap() {
+        Map<Class, Class> m = new WeakHashMap<>();
+        // Put all primitive to wrapper class mappings except
+        // that for Character
+        m.put(Boolean.TYPE, Boolean.class);
+        m.put(Byte.TYPE, Byte.class);
+        m.put(Character.TYPE, Character.class);
+        m.put(Short.TYPE, Short.class);
+        m.put(Integer.TYPE, Integer.class);
+        m.put(Long.TYPE, Long.class);
+        m.put(Float.TYPE, Float.class);
+        m.put(Double.TYPE, Double.class);
+
+        return Collections.unmodifiableMap(m);
+    }
+
+    private static Map<Class, Object> getPrimitiveToDefaultValueMap() {
+        Map<Class, Object> m = new WeakHashMap<>();
+        m.put(Boolean.class, Boolean.valueOf(false));
+        m.put(Byte.class, Byte.valueOf((byte) 0));
+        m.put(Character.class, Character.valueOf((char) 0x00));
+        m.put(Short.class, Short.valueOf((short) 0));
+        m.put(Integer.class, Integer.valueOf(0));
+        m.put(Long.class, Long.valueOf(0L));
+        m.put(Float.class, Float.valueOf(0.0f));
+        m.put(Double.class, Double.valueOf(0.0d));
+
+        return Collections.unmodifiableMap(m);
+    }
+
+    /**
+     * Prevents instantiation.
+     */
+    private PrimitiveMapper() {
+    }
 }

@@ -65,7 +65,7 @@ import org.glassfish.jersey.examples.rx.domain.Destination;
 import org.glassfish.jersey.examples.rx.domain.Forecast;
 import org.glassfish.jersey.examples.rx.domain.Recommendation;
 import org.glassfish.jersey.internal.guava.ThreadFactoryBuilder;
-import org.glassfish.jersey.Uri;
+import org.glassfish.jersey.server.Uri;
 
 /**
  * Obtain information about visited (destination) and recommended (destination, forecast, price) places for
