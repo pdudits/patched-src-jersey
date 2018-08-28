@@ -37,13 +37,14 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
 
 package org.glassfish.jersey.client.internal.inject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -66,8 +67,6 @@ import javax.inject.Singleton;
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Miroslav Fuksa
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
-
 @Singleton
 public class ParamConverterFactory implements ParamConverterProvider {
 
@@ -75,7 +74,7 @@ public class ParamConverterFactory implements ParamConverterProvider {
 
     public ParamConverterFactory(Set<ParamConverterProvider> providers, Set<ParamConverterProvider> customProviders) {
 
-        Set<ParamConverterProvider> copyProviders = new HashSet<>(providers);
+        Set<ParamConverterProvider> copyProviders = new LinkedHashSet<>(providers);
         converterProviders = new ArrayList<>();
         converterProviders.addAll(customProviders);
         copyProviders.removeAll(customProviders);
