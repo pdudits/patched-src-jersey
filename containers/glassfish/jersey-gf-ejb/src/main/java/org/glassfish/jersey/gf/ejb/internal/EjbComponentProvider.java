@@ -412,7 +412,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                         if (rawType.isInstance(result)
                                 || remoteAndLocalIfaces(rawType)
                                         .stream()
-                                        .filter(iFaces -> iFaces.isInstance(result))
+                                        .filter(iface -> iface.isInstance(result))
                                         .findAny()
                                         .isPresent()) {
                             return result;
@@ -446,7 +446,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                         if (rawType.isInstance(result)
                                 || remoteAndLocalIfaces(rawType)
                                         .stream()
-                                        .filter(iFaces -> iFaces.isInstance(result))
+                                        .filter(iface -> iface.isInstance(result))
                                         .findAny()
                                         .isPresent()) {
                             return result;
