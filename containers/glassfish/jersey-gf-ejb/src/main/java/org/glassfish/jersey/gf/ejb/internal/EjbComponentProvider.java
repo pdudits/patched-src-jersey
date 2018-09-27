@@ -2,6 +2,7 @@
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright (c) 2012-2017 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) [2018] Payara and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -190,24 +191,26 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         throw new NamingException("Application Information Not Found");
     }
 
-    private void registerEjbInterceptor() {
+    private void registerEjbInterceptor(Class<?> component) {
         try {
             final Object interceptor = new EjbComponentInterceptor(injectionManager);
             initialContext = getInitialContext();
             final EjbContainerUtil ejbUtil = EjbContainerUtilImpl.getInstance();
             final ApplicationInfo appInfo = getApplicationInfo(ejbUtil);
-            final List<String> tempLibNames = new LinkedList<>();
             for (ModuleInfo moduleInfo : appInfo.getModuleInfos()) {
                 final String jarName = moduleInfo.getName();
                 if (jarName.endsWith(".jar") || jarName.endsWith(".war")) {
                     final String moduleName = jarName.substring(0, jarName.length() - 4);
-                    tempLibNames.add(moduleName);
                     final Object bundleDescriptor = moduleInfo.getMetaData(EjbBundleDescriptorImpl.class.getName());
                     if (bundleDescriptor instanceof EjbBundleDescriptorImpl) {
                         final Collection<EjbDescriptor> ejbs = ((EjbBundleDescriptorImpl) bundleDescriptor).getEjbs();
 
                         for (final EjbDescriptor ejb : ejbs) {
                             final BaseContainer ejbContainer = EjbContainerUtilImpl.getInstance().getContainer(ejb.getUniqueId());
+                            if (ejbContainer.getEJBClass() != component) {
+                                continue;
+                            }
+                            libNames.add(moduleName);
                             try {
                                 AccessController.doPrivileged(new PrivilegedExceptionAction() {
                                     @Override
@@ -230,7 +233,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
                     }
                 }
             }
-            libNames.addAll(tempLibNames);
+
             final Object interceptorBinder = initialContext.lookup("java:org.glassfish.ejb.container.interceptor_binding_spi");
             // Some implementations of InitialContext return null instead of
             // throwing NamingException if there is no Object associated with
@@ -281,7 +284,7 @@ public final class EjbComponentProvider implements ComponentProvider, ResourceMe
         }
 
         if (!ejbInterceptorRegistered) {
-            registerEjbInterceptor();
+            registerEjbInterceptor(component);
         }
 
         Binding binding = Bindings.supplier(new EjbFactory(component, initialContext, EjbComponentProvider.this))
