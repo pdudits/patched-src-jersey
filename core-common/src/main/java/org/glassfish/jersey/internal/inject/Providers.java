@@ -337,8 +337,7 @@ public final class Providers {
                                                                 Class<T> contract,
                                                                 Comparator<Class<?>> objectComparator,
                                                                 Annotation... qualifiers) {
-
-        List<ServiceHolder<T>> serviceHolders = injectionManager.getAllServiceHolders(contract, qualifiers);
+        List<ServiceHolder<T>> serviceHolders = getServiceHolders(injectionManager, contract, qualifiers);
         serviceHolders.sort((o1, o2) -> objectComparator.compare(o1.getInstance().getClass(), o2.getInstance().getClass()));
         return serviceHolders;
     }
