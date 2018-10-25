@@ -313,9 +313,10 @@ public final class Providers {
     public static <T> Collection<ServiceHolder<T>> getAllServiceHolders(InjectionManager injectionManager, Class<T> contract) {
         List<ServiceHolder<T>> providers = getServiceHolders(injectionManager,
                                                              contract,
-                                                             Comparator.comparingInt(Providers::getPriority),
                                                              CustomAnnotationLiteral.INSTANCE);
         providers.addAll(getServiceHolders(injectionManager, contract));
+        providers.sort((o1, o2) -> Comparator.comparingInt(Providers::getPriority).compare(
+                o1.getInstance().getClass(), o2.getInstance().getClass()));
 
         LinkedHashSet<ServiceHolder<T>> providersSet = new LinkedHashSet<>();
         for (ServiceHolder<T> provider : providers) {
@@ -338,7 +339,7 @@ public final class Providers {
                                                                 Annotation... qualifiers) {
 
         List<ServiceHolder<T>> serviceHolders = injectionManager.getAllServiceHolders(contract, qualifiers);
-        serviceHolders.sort((o1, o2) -> objectComparator.compare(o1.getImplementationClass(), o2.getImplementationClass()));
+        serviceHolders.sort((o1, o2) -> objectComparator.compare(o1.getInstance().getClass(), o2.getInstance().getClass()));
         return serviceHolders;
     }
 
