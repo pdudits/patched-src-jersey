@@ -57,8 +57,10 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Priority;
 
 import javax.ws.rs.ConstrainedTo;
+import javax.ws.rs.Priorities;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.Feature;
 
@@ -335,6 +337,21 @@ public final class Providers {
         final List<ServiceHandle<T>> providers = getServiceHandles(locator, contract, CustomAnnotationLiteral.INSTANCE);
         providers.addAll(getServiceHandles(locator, contract));
 
+        Collections.sort(providers, new Comparator<ServiceHandle<T>>() {
+            @Override
+            public int compare(ServiceHandle<T> serviceHandle1, ServiceHandle<T> serviceHandle2) {
+                if (getPriority(serviceHandle1.getService().getClass())
+                        == getPriority(serviceHandle2.getService().getClass())) {
+                    return 0;
+                } else if (getPriority(serviceHandle1.getService().getClass())
+                        < getPriority(serviceHandle2.getService().getClass())) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+
         final LinkedHashMap<ActiveDescriptor, ServiceHandle<T>> providerMap =
                 new LinkedHashMap<ActiveDescriptor, ServiceHandle<T>>();
 
@@ -417,6 +434,15 @@ public final class Providers {
             set.addAll(Collections2.transform(hk2Providers, new ProviderToService<T>()));
             return set;
         }
+    }
+
+    private static int getPriority(Class<?> serviceClass) {
+        Priority annotation = serviceClass.getAnnotation(Priority.class);
+        if (annotation != null) {
+            return annotation.value();
+        }
+        // default priority
+        return Priorities.USER;
     }
 
     /**
