@@ -161,7 +161,7 @@ final class ParameterInserterFactory implements ParameterInserterProvider {
                         PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));
             }
 
-            return new PrimitiveValueOfInserter(
+            return new PrimitiveToStringInserter(
                     parameterName,
                     defaultValue,
                     PrimitiveMapper.primitiveToDefaultValueMap.get(wrappedRaw));

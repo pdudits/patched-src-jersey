@@ -52,7 +52,7 @@ import org.glassfish.jersey.client.inject.ParameterInserter;
  * @author Gaurav Gupta (gaurav.gupta@payara.fish)
  *
  */
-final class PrimitiveValueOfInserter implements ParameterInserter<Number, String> {
+final class PrimitiveToStringInserter implements ParameterInserter<Object, String> {
 
     private final String parameter;
     private final String defaultValue;
@@ -61,14 +61,13 @@ final class PrimitiveValueOfInserter implements ParameterInserter<Number, String
     /**
      * Create new primitive parameter value inserter.
      *
-     * @param valueOf {@code valueOf()} method handler.
-     * @param parameter string parameter value.
-     * @param defaultValue default string value.
-     * @param defaultPrimitiveTypeValue default primitive type value.
+     * @param parameter the parameter name
+     * @param defaultValue default value of the parameter.
+     * @param defaultPrimitiveTypeValue default value of the primitive type.
      */
-    public PrimitiveValueOfInserter(String parameter,
-            String defaultValue,
-            Object defaultPrimitiveTypeValue) {
+    public PrimitiveToStringInserter(String parameter,
+                                     String defaultValue,
+                                     Object defaultPrimitiveTypeValue) {
         this.parameter = parameter;
         this.defaultValue = defaultValue;
         this.defaultPrimitiveTypeValue = defaultPrimitiveTypeValue;
@@ -85,7 +84,7 @@ final class PrimitiveValueOfInserter implements ParameterInserter<Number, String
     }
 
     @Override
-    public String insert(Number value) {
+    public String insert(Object value) {
         if (value != null) {
             return value.toString();
         } else if (defaultValue != null) {
