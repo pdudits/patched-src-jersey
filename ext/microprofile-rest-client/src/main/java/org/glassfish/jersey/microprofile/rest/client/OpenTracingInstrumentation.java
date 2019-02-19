@@ -44,6 +44,13 @@ public class OpenTracingInstrumentation {
 
     private static final Logger logger = Logger.getLogger(RestClientBuilderImpl.class.getName());
 
+    /**
+     * Creates a Map of JAX-RS endpoints that tracing should be skipped on.
+     * @param baseUri The base URI of the JAX-RS application
+     * @param restClientInterface The MicroProfile Rest Client interface to create the skip map for
+     * @param <T> The Class of the MicroProfile Rest Client interface
+     * @return A Map of JAX-RS endpoints that tracing should be skipped on.
+     */
     protected static <T> Map<String, String> createRestClientSkipMethodTracingMap(URI baseUri,
             Class<T> restClientInterface) {
         Map<String, String> skipTracingMap = new HashMap<>();
@@ -74,6 +81,16 @@ public class OpenTracingInstrumentation {
         return skipTracingMap;
     }
 
+    /**
+     * Helper method that populates the map of JAX-RS endpoints to skip, checking a config for any overrides.
+     *
+     * @param config The config to check for overrides from
+     * @param classLevelPathValue The value of the Path variable that the class is annotated with
+     * @param baseUri THe base URI of the JAX-RS application
+     * @param restClientInterface The MicroProfile Rest Client interface to create the skip map for
+     * @param skipTracingMap The map of JAX-RS endpoints that should be skipped
+     * @param <T> The Class of the MicroProfile Rest Client interface
+     */
     private static <T> void populateSkipTracingMapUsingConfig(Config config, String classLevelPathValue, URI baseUri,
             Class<T> restClientInterface, Map<String, String> skipTracingMap) {
         // Get the class name
@@ -178,6 +195,15 @@ public class OpenTracingInstrumentation {
         }
     }
 
+    /**
+     * Helper method that populates the map of JAX-RS endpoints to skip.
+     *
+     * @param classLevelPathValue The value of the Path variable that the class is annotated with
+     * @param baseUri The base URI of the
+     * @param restClientInterface The MicroProfile Rest Client interface to create the skip map for
+     * @param skipTracingMap The map of JAX-RS endpoints that should be skipped
+     * @param <T> The Class of the MicroProfile Rest Client interface
+     */
     private static <T> void populateSkipTracingMap(String classLevelPathValue, URI baseUri,
             Class<T> restClientInterface, Map<String, String> skipTracingMap) {
         logger.log(Level.FINER, "No config to get override parameters from. Just checking annotations directly...");
@@ -230,6 +256,17 @@ public class OpenTracingInstrumentation {
         }
     }
 
+    /**
+     * Helper method that gets the Path annotation value from a provided method if present and appends its value to
+     * the jaxrsMethodEndpoint variable, using a config override if one is present.
+     *
+     * @param config The Config to check for an override from.
+     * @param method The method to check for the Path annotation on
+     * @param annotatedClassCanonicalName The name of the class that we're checking for overrides on
+     * @param annotatedMethodName The name of the method that we're checking for overrides on
+     * @param jaxrsMethodEndpoint The String being used to construct the JAX-RS Endpoint to skip
+     * @return The String being used to construct the JAX-RS Endpoint to skip
+     */
     private static String getMethodLevelPathValueIfPresentUsingConfig(Config config, Method method,
             String annotatedClassCanonicalName, String annotatedMethodName, String jaxrsMethodEndpoint) {
         Optional<String> pathOverride = config.getOptionalValue(annotatedClassCanonicalName + "/"
@@ -243,6 +280,13 @@ public class OpenTracingInstrumentation {
         return jaxrsMethodEndpoint;
     }
 
+    /**
+     * Helper method that gets the Path annotation value from a provided method if present and appends its value to
+     * the jaxrsMethodEndpoint variable.
+     * @param method The method to check for the Path annotation on
+     * @param jaxrsMethodEndpoint The String being used to construct the JAX-RS Endpoint to skip
+     * @return c
+     */
     private static String getMethodLevelPathValueIfPresent(Method method, String jaxrsMethodEndpoint) {
         Path pathAnnotation = method.getAnnotation(Path.class);
         if (pathAnnotation != null) {
