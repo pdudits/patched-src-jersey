@@ -237,7 +237,7 @@ public class OpenTracingInstrumentation {
         if (pathOverride.isPresent()) {
             jaxrsMethodEndpoint += pathOverride.get();
         } else {
-            getMethodLevelPathValueIfPresent(method, jaxrsMethodEndpoint);
+            jaxrsMethodEndpoint = getMethodLevelPathValueIfPresent(method, jaxrsMethodEndpoint);
         }
 
         return jaxrsMethodEndpoint;
