@@ -127,8 +127,8 @@ public class OpenTracingInstrumentation {
                     // check if there's one for the class
                     logger.log(Level.FINER, "No config override for annotated method, getting config override "
                             + "for the annotated class...");
-                    tracedOverride = config.getOptionalValue(annotatedClassCanonicalName + "/" +
-                            Traced.class.getSimpleName() + "/" + "value", boolean.class);
+                    tracedOverride = config.getOptionalValue(annotatedClassCanonicalName + "/"
+                            + Traced.class.getSimpleName() + "/" + "value", boolean.class);
 
                     // If we found a config override, and it disables the method, add it to the list
                     if (tracedOverride.isPresent()) {
