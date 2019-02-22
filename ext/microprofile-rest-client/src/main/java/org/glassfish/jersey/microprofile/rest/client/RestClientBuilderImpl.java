@@ -15,24 +15,24 @@
  */
 package org.glassfish.jersey.microprofile.rest.client;
 
-import org.glassfish.jersey.microprofile.rest.client.ext.DefaultResponseExceptionMapper;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Map;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Configuration;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
 import org.glassfish.jersey.client.proxy.WebResourceFactory;
-import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEFAULT_EXCEPTION_MAPPER;
 import org.glassfish.jersey.microprofile.rest.client.config.ConfigController;
-import static java.lang.Boolean.FALSE;
+import org.glassfish.jersey.microprofile.rest.client.ext.DefaultResponseExceptionMapper;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Configuration;
 import java.net.URI;
-import org.eclipse.microprofile.rest.client.annotation.RegisterProviders;
-import org.glassfish.jersey.client.JerseyClient;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Map;
+
+import static java.lang.Boolean.FALSE;
+import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEFAULT_EXCEPTION_MAPPER;
 
 public class RestClientBuilderImpl implements RestClientBuilder {
 
@@ -69,7 +69,12 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         registerProviders(restClientInterface);
 
         Client client =  clientBuilder.build();
+
+        client.property("skipTracingOn", OpenTracingInstrumentation.createRestClientSkipMethodTracingMap(
+                baseUri, restClientInterface));
+
         WebTarget webTarget = client.target(baseUri);
+
         return WebResourceFactory.newResource(restClientInterface, webTarget);
     }
 
