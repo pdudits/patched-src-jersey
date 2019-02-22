@@ -15,23 +15,26 @@
  */
 package org.glassfish.jersey.microprofile.rest.client;
 
+import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
+import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
+import org.glassfish.jersey.MPConfig;
+import org.glassfish.jersey.client.proxy.WebResourceFactory;
 import org.glassfish.jersey.microprofile.rest.client.ext.DefaultResponseExceptionMapper;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Map;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
-import org.eclipse.microprofile.rest.client.RestClientBuilder;
-import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
-import org.eclipse.microprofile.rest.client.annotation.RegisterProvider;
-import org.glassfish.jersey.client.proxy.WebResourceFactory;
-import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEFAULT_EXCEPTION_MAPPER;
-import org.glassfish.jersey.MPConfig;
-import static java.lang.Boolean.FALSE;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
+
+import static java.lang.Boolean.FALSE;
+import static org.glassfish.jersey.microprofile.rest.client.Constant.DISABLE_DEFAULT_EXCEPTION_MAPPER;
 
 public class RestClientBuilderImpl implements RestClientBuilder {
 
@@ -83,7 +86,12 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         registerProviders(restClientInterface);
 
         Client client =  clientBuilder.build();
+
+        client.property("skipTracingOn", OpenTracingInstrumentation.createRestClientSkipMethodTracingMap(
+                baseUri, restClientInterface));
+
         WebTarget webTarget = client.target(baseUri);
+
         return WebResourceFactory.newResource(restClientInterface, webTarget);
     }
 
