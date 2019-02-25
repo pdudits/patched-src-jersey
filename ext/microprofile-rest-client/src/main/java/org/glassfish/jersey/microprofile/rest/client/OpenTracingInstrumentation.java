@@ -23,7 +23,6 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
 import javax.ws.rs.OPTIONS;
-import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -306,7 +305,7 @@ public class OpenTracingInstrumentation {
      */
     private static String getHttpMethodName(Method method) {
         // Initialise an Array with all supported JaxRs HTTP methods
-        Class[] httpMethods = {GET.class, POST.class, DELETE.class, PUT.class, HEAD.class, PATCH.class, OPTIONS.class};
+        Class[] httpMethods = {GET.class, POST.class, DELETE.class, PUT.class, HEAD.class, OPTIONS.class};
 
         // Check if any of the HTTP Method annotations are present on the intercepted method
         for (Class httpMethod : httpMethods) {
