@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,7 @@ import javax.ws.rs.HttpMethod;
 
 import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.annotation.ClientHeaderParam;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
  * Utils for interface handling.
@@ -96,12 +98,11 @@ class InterfaceUtil {
         int lastIndex = methodName.lastIndexOf(".");
         String className = methodName.substring(0, lastIndex);
         String staticMethodName = methodName.substring(lastIndex + 1);
-        try {
-            Class<?> classWithStaticMethod = Class.forName(className);
-            return getComputeMethod(classWithStaticMethod, staticMethodName);
-        } catch (ClassNotFoundException e) {
+        Class<?> classWithStaticMethod = AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
+        if (classWithStaticMethod == null) {
             throw new RestClientDefinitionException("Class which should contain compute method does not exist: " + className);
         }
+        return getComputeMethod(classWithStaticMethod, staticMethodName);
     }
 
     private static List<Method> getComputeMethod(Class<?> iClass, String methodName) {

@@ -20,6 +20,7 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
  * Rest client builder implementation. Creates proxy instance of requested interface.
@@ -181,13 +183,12 @@ public class RestClientBuilderImpl implements RestClientBuilder {
 
     private void processConfigProviders(Class<?> restClientInterface, String[] providerArray) {
         for (String provider : providerArray) {
-            try {
-                Class<?> providerClass = Class.forName(provider);
-                int priority = getProviderPriority(restClientInterface, providerClass);
-                register(providerClass, priority);
-            } catch (ClassNotFoundException e) {
+            Class<?> providerClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(provider));
+            if (providerClass == null) {
                 throw new IllegalStateException("Class with name " + provider + " not found");
             }
+            int priority = getProviderPriority(restClientInterface, providerClass);
+            register(providerClass, priority);
         }
     }
 
