@@ -100,11 +100,13 @@
                     <artifactId>el-api</artifactId>
                 </exclusion>
             </exclusions>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x</artifactId>
             <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
 
 
