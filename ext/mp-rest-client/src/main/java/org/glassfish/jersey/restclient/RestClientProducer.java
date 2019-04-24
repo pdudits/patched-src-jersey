@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.AccessController;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,6 +44,7 @@ import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
  * Handles proper rest client injection.
@@ -185,12 +187,11 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
         String configScope = config.getOptionalValue(interfaceType.getName() + CONFIG_SCOPE, String.class).orElse(null);
         if (configScope != null) {
             try {
-                return (Class<? extends Annotation>) Class.forName(configScope);
+                return AccessController.doPrivileged(ReflectionHelper.classForNamePA(configScope));
             } catch (Exception e) {
                 throw new IllegalArgumentException("Invalid scope from config: " + configScope, e);
             }
         }
-
         List<Annotation> possibleScopes = Arrays.stream(interfaceType.getDeclaredAnnotations())
                 .filter(annotation -> beanManager.isScope(annotation.annotationType()))
                 .collect(Collectors.toList());
