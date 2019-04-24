@@ -184,6 +184,9 @@ public class RestClientBuilderImpl implements RestClientBuilder {
     private void processConfigProviders(Class<?> restClientInterface, String[] providerArray) {
         for (String provider : providerArray) {
             Class<?> providerClass = AccessController.doPrivileged(ReflectionHelper.classForNamePA(provider));
+            if (providerClass == null) {
+                throw new IllegalStateException("No provider class with following name found: " + provider);
+            }
             int priority = getProviderPriority(restClientInterface, providerClass);
             register(providerClass, priority);
         }

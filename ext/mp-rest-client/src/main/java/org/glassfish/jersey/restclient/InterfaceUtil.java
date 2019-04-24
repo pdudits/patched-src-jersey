@@ -99,6 +99,9 @@ class InterfaceUtil {
         String className = methodName.substring(0, lastIndex);
         String staticMethodName = methodName.substring(lastIndex + 1);
         Class<?> classWithStaticMethod = AccessController.doPrivileged(ReflectionHelper.classForNamePA(className));
+        if (classWithStaticMethod == null) {
+            throw new IllegalStateException("No class with following name found: " + className);
+        }
         return getComputeMethod(classWithStaticMethod, staticMethodName);
     }
 

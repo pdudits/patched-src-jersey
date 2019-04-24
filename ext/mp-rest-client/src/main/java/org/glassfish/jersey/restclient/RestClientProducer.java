@@ -42,6 +42,7 @@ import javax.enterprise.inject.spi.PassivationCapable;
 import org.eclipse.microprofile.config.Config;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.rest.client.RestClientBuilder;
+import org.eclipse.microprofile.rest.client.RestClientDefinitionException;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
@@ -186,11 +187,11 @@ class RestClientProducer implements Bean<Object>, PassivationCapable {
     private Class<? extends Annotation> resolveProperClientScope() {
         String configScope = config.getOptionalValue(interfaceType.getName() + CONFIG_SCOPE, String.class).orElse(null);
         if (configScope != null) {
-            try {
-                return AccessController.doPrivileged(ReflectionHelper.classForNamePA(configScope));
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Invalid scope from config: " + configScope, e);
+            Class<Annotation> scope = AccessController.doPrivileged(ReflectionHelper.classForNamePA(configScope));
+            if (scope == null) {
+                throw new IllegalStateException("Invalid scope from config: " + configScope);
             }
+            return scope;
         }
         List<Annotation> possibleScopes = Arrays.stream(interfaceType.getDeclaredAnnotations())
                 .filter(annotation -> beanManager.isScope(annotation.annotationType()))
