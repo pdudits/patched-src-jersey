@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-api</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.1.payara-p1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
@@ -102,7 +102,7 @@
         <dependency>
             <groupId>org.eclipse.microprofile.rest.client</groupId>
             <artifactId>microprofile-rest-client-tck</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.1.payara-p1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -163,6 +163,9 @@
                     <dependenciesToScan>
                         <dependency>org.eclipse.microprofile.rest.client:microprofile-rest-client-tck</dependency>
                     </dependenciesToScan>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
@@ -171,7 +174,7 @@
                 <version>2.7.0</version>
                 <executions>
                     <execution>
-                        <phase>test-compile</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
