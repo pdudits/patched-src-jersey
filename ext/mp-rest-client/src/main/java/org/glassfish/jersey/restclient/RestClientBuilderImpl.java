@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.ext.ParamConverterProvider;
 
@@ -53,6 +51,7 @@ import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
 import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
+import org.glassfish.jersey.client.JerseyWebTarget;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
@@ -166,15 +165,17 @@ public class RestClientBuilderImpl implements RestClientBuilder {
 
         jerseyClientBuilder.executorService(new ExecutorServiceWrapper(executorService.get(), asyncInterceptors));
 
+        JerseyClient client = jerseyClientBuilder.build();
+        client.preInitialize();
+        JerseyWebTarget webTarget = client.target(this.uri);
+
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
                                                                paramConverterProviders,
-                                                               asyncInterceptors);
+                                                               asyncInterceptors,
+                                                               webTarget.getInjectionManager());
 
 
-        JerseyClient client = jerseyClientBuilder.build();
-        client.preInitialize();
-        WebTarget webTarget = client.target(this.uri);
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                                           new Class[] {interfaceClass},
                                           new ProxyInvocationHandler(webTarget, restClientModel)
