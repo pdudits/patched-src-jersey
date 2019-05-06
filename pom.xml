@@ -30,7 +30,7 @@
     <groupId>org.glassfish.jersey</groupId>
     <artifactId>project</artifactId>
     <packaging>pom</packaging>
-    <version>2.29.payara-p1-SNAPSHOT</version>
+    <version>2.29.payara-p2-SNAPSHOT</version>
     <name>jersey</name>
     <description>
         Eclipse Jersey is the open source (under dual EPL+GPL license) JAX-RS 2.1 (JSR 370)
@@ -211,7 +211,7 @@
         <connection>scm:git:git@github.com:jersey/jersey.git</connection>
         <developerConnection>scm:git:git@github.com:eclipse-ee4j/jersey.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/jersey</url>
-        <tag>HEAD</tag>
+        <tag>project-2.29.payara-p1</tag>
     </scm>
 
     <organization>
