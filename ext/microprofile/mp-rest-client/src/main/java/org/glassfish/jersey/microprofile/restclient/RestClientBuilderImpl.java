@@ -37,7 +37,12 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.Feature;
+import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.ParamConverterProvider;
 
 import org.eclipse.microprofile.config.Config;
@@ -49,9 +54,10 @@ import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptorFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
 import org.eclipse.microprofile.rest.client.spi.RestClientListener;
+import org.glassfish.jersey.client.Initializable;
 import org.glassfish.jersey.client.JerseyClient;
-import org.glassfish.jersey.client.JerseyClientBuilder;
-import org.glassfish.jersey.client.JerseyWebTarget;
+import org.glassfish.jersey.internal.inject.InjectionManager;
+import org.glassfish.jersey.internal.inject.InjectionManagerSupplier;
 import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
@@ -72,16 +78,16 @@ public class RestClientBuilderImpl implements RestClientBuilder {
     private final Config config;
     private final ConfigWrapper configWrapper;
     private URI uri;
-    private JerseyClientBuilder jerseyClientBuilder;
+    private ClientBuilder clientBuilder;
     private Supplier<ExecutorService> executorService;
 
     RestClientBuilderImpl() {
-        jerseyClientBuilder = new JerseyClientBuilder();
+        clientBuilder = ClientBuilder.newBuilder();
         responseExceptionMappers = new HashSet<>();
         paramConverterProviders = new HashSet<>();
         asyncInterceptorFactories = new ArrayList<>();
         config = ConfigProvider.getConfig();
-        configWrapper = new ConfigWrapper(jerseyClientBuilder.getConfiguration());
+        configWrapper = new ConfigWrapper(clientBuilder.getConfiguration());
         executorService = Executors::newCachedThreadPool;
     }
 
@@ -97,13 +103,13 @@ public class RestClientBuilderImpl implements RestClientBuilder {
 
     @Override
     public RestClientBuilder connectTimeout(long timeout, TimeUnit unit) {
-        jerseyClientBuilder.connectTimeout(timeout, unit);
+        clientBuilder.connectTimeout(timeout, unit);
         return this;
     }
 
     @Override
     public RestClientBuilder readTimeout(long timeout, TimeUnit unit) {
-        jerseyClientBuilder.readTimeout(timeout, unit);
+        clientBuilder.readTimeout(timeout, unit);
         return this;
     }
 
@@ -125,7 +131,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         }
 
         //Provider registration part
-        Object providersFromJerseyConfig = jerseyClientBuilder.getConfiguration()
+        Object providersFromJerseyConfig = clientBuilder.getConfiguration()
                 .getProperty(interfaceClass.getName() + CONFIG_PROVIDERS);
         if (providersFromJerseyConfig instanceof String && !((String) providersFromJerseyConfig).isEmpty()) {
             String[] providerArray = ((String) providersFromJerseyConfig).split(PROVIDER_SEPARATOR);
@@ -140,13 +146,15 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         for (RegisterProvider registerProvider : registerProviders) {
             register(registerProvider.value(), registerProvider.priority() < 0 ? Priorities.USER : registerProvider.priority());
         }
+        InjectionManagerExposer injectionManagerExposer = new InjectionManagerExposer();
+        register(injectionManagerExposer);
 
         for (RestClientListener restClientListener : ServiceLoader.load(RestClientListener.class)) {
             restClientListener.onNewClient(interfaceClass, this);
         }
 
         //We need to check first if default exception mapper was not disabled by property on builder.
-        Object disableDefaultMapperJersey = jerseyClientBuilder.getConfiguration().getProperty(CONFIG_DISABLE_DEFAULT_MAPPER);
+        Object disableDefaultMapperJersey = clientBuilder.getConfiguration().getProperty(CONFIG_DISABLE_DEFAULT_MAPPER);
         if (disableDefaultMapperJersey != null && disableDefaultMapperJersey.equals(Boolean.FALSE)) {
             register(new DefaultResponseExceptionMapper());
         } else if (disableDefaultMapperJersey == null) {
@@ -163,17 +171,19 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                 .collect(Collectors.toList());
         asyncInterceptors.forEach(AsyncInvocationInterceptor::prepareContext);
 
-        jerseyClientBuilder.executorService(new ExecutorServiceWrapper(executorService.get(), asyncInterceptors));
+        clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get(), asyncInterceptors));
 
-        JerseyClient client = jerseyClientBuilder.build();
-        client.preInitialize();
-        JerseyWebTarget webTarget = client.target(this.uri);
+        Client client = clientBuilder.build();
+        if (client instanceof Initializable) {
+            ((Initializable) client).preInitialize();
+        }
+        WebTarget webTarget = client.target(this.uri);
 
         RestClientModel restClientModel = RestClientModel.from(interfaceClass,
                                                                responseExceptionMappers,
                                                                paramConverterProviders,
                                                                asyncInterceptors,
-                                                               webTarget.getInjectionManager());
+                                                               injectionManagerExposer.injectionManager);
 
 
         return (T) Proxy.newProxyInstance(interfaceClass.getClassLoader(),
@@ -196,7 +206,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
     private int getProviderPriority(Class<?> restClientInterface, Class<?> providerClass) {
         String property = restClientInterface.getName() + CONFIG_PROVIDERS + "/"
                 + providerClass.getName() + CONFIG_PROVIDER_PRIORITY;
-        Object providerPriorityJersey = jerseyClientBuilder.getConfiguration().getProperty(property);
+        Object providerPriorityJersey = clientBuilder.getConfiguration().getProperty(property);
         if (providerPriorityJersey == null) {
             //If property was not set on Jersey ClientBuilder, we need to check MP config.
             Optional<Integer> providerPriorityMP = config.getOptionalValue(property, int.class);
@@ -217,7 +227,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
 
     @Override
     public RestClientBuilder property(String name, Object value) {
-        jerseyClientBuilder.property(name, value);
+        clientBuilder.property(name, value);
         return this;
     }
 
@@ -226,7 +236,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         if (isSupportedCustomProvider(aClass)) {
             register(ReflectionUtil.createInstance(aClass));
         } else {
-            jerseyClientBuilder.register(aClass);
+            clientBuilder.register(aClass);
         }
         return this;
     }
@@ -236,7 +246,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         if (isSupportedCustomProvider(aClass)) {
             register(ReflectionUtil.createInstance(aClass), i);
         } else {
-            jerseyClientBuilder.register(aClass, i);
+            clientBuilder.register(aClass, i);
         }
         return this;
     }
@@ -246,7 +256,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         if (isSupportedCustomProvider(aClass)) {
             register(ReflectionUtil.createInstance(aClass), classes);
         } else {
-            jerseyClientBuilder.register(aClass, classes);
+            clientBuilder.register(aClass, classes);
         }
         return this;
     }
@@ -256,7 +266,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         if (isSupportedCustomProvider(aClass)) {
             register(ReflectionUtil.createInstance(aClass), map);
         } else {
-            jerseyClientBuilder.register(aClass, map);
+            clientBuilder.register(aClass, map);
         }
         return this;
     }
@@ -266,9 +276,9 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         if (o instanceof ResponseExceptionMapper) {
             ResponseExceptionMapper mapper = (ResponseExceptionMapper) o;
             registerCustomProvider(o, -1);
-            jerseyClientBuilder.register(mapper, mapper.getPriority());
+            clientBuilder.register(mapper, mapper.getPriority());
         } else {
-            jerseyClientBuilder.register(o);
+            clientBuilder.register(o);
             registerCustomProvider(o, -1);
         }
         return this;
@@ -276,7 +286,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
 
     @Override
     public RestClientBuilder register(Object o, int i) {
-        jerseyClientBuilder.register(o, i);
+        clientBuilder.register(o, i);
         registerCustomProvider(o, i);
         return this;
     }
@@ -288,7 +298,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                 register(o);
             }
         }
-        jerseyClientBuilder.register(o, classes);
+        clientBuilder.register(o, classes);
         return this;
     }
 
@@ -301,7 +311,7 @@ public class RestClientBuilderImpl implements RestClientBuilder {
                 registerCustomProvider(o, map.get(ParamConverterProvider.class));
             }
         }
-        jerseyClientBuilder.register(o, map);
+        clientBuilder.register(o, map);
         return this;
     }
 
@@ -327,6 +337,20 @@ public class RestClientBuilderImpl implements RestClientBuilder {
         }
         if (instance instanceof AsyncInvocationInterceptorFactory) {
             asyncInterceptorFactories.add((AsyncInvocationInterceptorFactory) instance);
+        }
+    }
+
+    private static class InjectionManagerExposer implements Feature {
+        InjectionManager injectionManager;
+
+        @Override
+        public boolean configure(FeatureContext context) {
+            if (context instanceof InjectionManagerSupplier) {
+                this.injectionManager = ((InjectionManagerSupplier) context).getInjectionManager();
+                return true;
+            } else {
+                throw new IllegalArgumentException("The client needs Jersey runtime to work properly");
+            }
         }
     }
 

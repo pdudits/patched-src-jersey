@@ -25,6 +25,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by David Kral.
@@ -41,7 +42,7 @@ public class RestClientModelTest extends JerseyTest {
         ApplicationResource app = RestClientBuilder.newBuilder()
                 .baseUri(new URI("http://localhost:9998"))
                 .build(ApplicationResource.class);
-        System.out.println(app.getValue());
-        System.out.println(app.sayHi());
+        assertEquals("This is default value!", app.getValue());
+        assertEquals("Hi", app.sayHi());
     }
 }

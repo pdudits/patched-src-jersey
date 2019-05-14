@@ -19,6 +19,10 @@ package org.glassfish.jersey.microprofile.restclient;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Proxy;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
+import org.glassfish.jersey.internal.util.ReflectionHelper;
 
 /**
  * Created by David Kral.
@@ -26,16 +30,18 @@ import java.lang.reflect.Proxy;
 class ReflectionUtil {
 
     static <T> T createInstance(Class<T> tClass) {
-        try {
-            return tClass.newInstance();
-        } catch (Throwable t) {
-            throw new RuntimeException("No default constructor in class " + tClass + " present. Class cannot be created!", t);
-        }
+        return AccessController.doPrivileged((PrivilegedAction<T>) () -> {
+            try {
+                return tClass.newInstance();
+            } catch (Throwable t) {
+                throw new RuntimeException("No default constructor in class " + tClass + " present. Class cannot be created!", t);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
     static <T> T createProxyInstance(Class<T> restClientClass) {
-        return (T) Proxy.newProxyInstance(
+        return AccessController.doPrivileged((PrivilegedAction<T>) () -> (T) Proxy.newProxyInstance(
                 Thread.currentThread().getContextClassLoader(),
                 new Class[] {restClientClass},
                 (proxy, m, args) -> {
@@ -47,7 +53,7 @@ class ReflectionUtil {
                             .unreflectSpecial(m, restClientClass)
                             .bindTo(proxy)
                             .invokeWithArguments(args);
-                });
+                }));
     }
 
 }

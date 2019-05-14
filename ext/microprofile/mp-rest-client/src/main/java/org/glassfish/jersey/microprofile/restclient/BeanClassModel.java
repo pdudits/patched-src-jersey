@@ -18,6 +18,8 @@ package org.glassfish.jersey.microprofile.restclient;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -206,15 +208,20 @@ class BeanClassModel {
     }
 
     private Object resolveValueFromField(Field field, Object instance) {
-        try {
-            Object toReturn;
-            field.setAccessible(true);
-            toReturn = field.get(instance);
-            field.setAccessible(false);
-            return toReturn;
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+            try {
+                Object toReturn;
+                if (field.isAccessible()) {
+                    return field.get(instance);
+                }
+                field.setAccessible(true);
+                toReturn = field.get(instance);
+                field.setAccessible(false);
+                return toReturn;
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private static class Builder {
