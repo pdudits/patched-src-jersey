@@ -102,6 +102,10 @@ class RestClientModel {
         }
     }
 
+    Class<?> getRestClientClass() {
+        return interfaceModel.getRestClientClass();
+    }
+
     private static Map<Method, MethodModel> parseMethodModels(InterfaceModel classModel) {
         Map<Method, MethodModel> methodMap = new HashMap<>();
         for (Method method : classModel.getRestClientClass().getMethods()) {

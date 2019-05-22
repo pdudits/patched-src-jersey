@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +17,16 @@
 
 package org.glassfish.jersey.microprofile.restclient;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 /**
- * Created by David Kral.
+ * @author David Kral
+ * @author Patrik Dudits
  */
 public class ApplicationResourceImpl implements ApplicationResource {
     @Override
@@ -28,5 +37,22 @@ public class ApplicationResourceImpl implements ApplicationResource {
     @Override
     public String postAppendValue(String value) {
         return null;
+    }
+
+    @Override
+    public List<String> list(int size) {
+        return IntStream.rangeClosed(1, size).mapToObj(i -> "int" + i).collect(Collectors.toList());
+    }
+
+    @Override
+    public Map<String, Integer> map(int size) {
+        return IntStream.rangeClosed(1, size).mapToObj(i -> i).collect(Collectors.toMap(String::valueOf, Function.identity()));
+    }
+
+    @Override
+    public Map<String, Integer> acceptList(List<Integer> numbers) {
+        Map<String, Integer> result = new HashMap<>();
+        result.put("size", numbers != null ? numbers.size() : -1);
+        return result;
     }
 }
