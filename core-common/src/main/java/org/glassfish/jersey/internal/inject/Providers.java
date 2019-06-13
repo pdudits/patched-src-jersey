@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2019 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +55,7 @@ import org.glassfish.jersey.spi.Contract;
  *
  * @author Marek Potociar (marek.potociar at oracle.com)
  * @author Miroslav Fuksa
+ * @author Patrik Dudits
  */
 public final class Providers {
 
@@ -278,7 +280,7 @@ public final class Providers {
         List<ServiceHolder<T>> providers = getServiceHolders(injectionManager,
                                                              contract,
                                                              CustomAnnotationLiteral.INSTANCE);
-        providers.addAll(getServiceHolders(injectionManager, contract));
+        providers.addAll(getServiceHolders(injectionManager, contract, Comparator.comparingInt(Providers::getPriority)));
         providers.sort((o1, o2) -> Comparator.comparingInt(Providers::getPriority).compare(
                 o1.getInstance().getClass(), o2.getInstance().getClass()));
 
