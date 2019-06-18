@@ -312,7 +312,7 @@ public class CdiComponentProvider implements ComponentProvider, Extension {
                 : new GenericCdiBeanSupplier(clazz, injectionManager, beanManager, isCdiManaged);
 
         SupplierInstanceBinding<AbstractCdiBeanSupplier> builder = Bindings.supplier(beanFactory)
-                .to(clazz);
+                .to(clazz).qualifiedBy(CustomAnnotationLiteral.INSTANCE);
         for (final Class contract : providerContracts) {
             builder.to(contract);
         }
