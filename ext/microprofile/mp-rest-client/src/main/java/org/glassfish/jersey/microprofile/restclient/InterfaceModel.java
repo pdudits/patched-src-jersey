@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.spi.CreationalContext;
 import javax.enterprise.inject.spi.BeanManager;
-import javax.enterprise.inject.spi.CDI;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -41,8 +40,8 @@ import org.eclipse.microprofile.rest.client.annotation.RegisterClientHeaders;
 import org.eclipse.microprofile.rest.client.ext.AsyncInvocationInterceptor;
 import org.eclipse.microprofile.rest.client.ext.ClientHeadersFactory;
 import org.eclipse.microprofile.rest.client.ext.ResponseExceptionMapper;
-import org.glassfish.jersey.client.inject.ParameterInserter;
-import org.glassfish.jersey.client.inject.ParameterInserterProvider;
+import org.glassfish.jersey.client.inject.ParameterUpdater;
+import org.glassfish.jersey.client.inject.ParameterUpdaterProvider;
 import org.glassfish.jersey.internal.inject.InjectionManager;
 import org.glassfish.jersey.internal.inject.Providers;
 import org.glassfish.jersey.model.Parameter;
@@ -73,10 +72,10 @@ class InterfaceModel {
     /**
      * Creates new model based on interface class. Interface is parsed according to specific annotations.
      *
-     * @param restClientClass interface class
+     * @param restClientClass          interface class
      * @param responseExceptionMappers registered exception mappers
-     * @param paramConverterProviders registered parameter providers
-     * @param asyncInterceptors async interceptors
+     * @param paramConverterProviders  registered parameter providers
+     * @param asyncInterceptors        async interceptors
      * @param injectionManager
      * @return new model instance
      */
@@ -91,13 +90,7 @@ class InterfaceModel {
                            paramConverterProviders,
                            asyncInterceptors,
                            injectionManager,
-                           beanManager)
-                .pathValue(restClientClass.getAnnotation(Path.class))
-                .produces(restClientClass.getAnnotation(Produces.class))
-                .consumes(restClientClass.getAnnotation(Consumes.class))
-                .clientHeaders(restClientClass.getAnnotationsByType(ClientHeaderParam.class))
-                .clientHeadersFactory(restClientClass.getAnnotation(RegisterClientHeaders.class))
-                .build();
+                           beanManager).build();
     }
 
     private InterfaceModel(Builder builder) {
@@ -216,8 +209,6 @@ class InterfaceModel {
     }
 
     /**
-     *
-     *
      * @return
      */
     public InjectionManager getInjectionManager() {
@@ -231,13 +222,13 @@ class InterfaceModel {
      * @return converted value of argument
      */
     Object resolveParamValue(Object arg, Parameter parameter) {
-        final Iterable<ParameterInserterProvider> parameterInserterProviders
-                = Providers.getAllProviders(injectionManager, ParameterInserterProvider.class);
-        for (final ParameterInserterProvider parameterInserterProvider : parameterInserterProviders) {
-            if (parameterInserterProvider != null) {
-                ParameterInserter<Object, Object> inserter =
-                        (ParameterInserter<Object, Object>) parameterInserterProvider.get(parameter);
-                return inserter.insert(arg);
+        final Iterable<ParameterUpdaterProvider> parameterUpdaterProviders
+                = Providers.getAllProviders(injectionManager, ParameterUpdaterProvider.class);
+        for (final ParameterUpdaterProvider parameterUpdaterProvider : parameterUpdaterProviders) {
+            if (parameterUpdaterProvider != null) {
+                ParameterUpdater<Object, Object> updater =
+                        (ParameterUpdater<Object, Object>) parameterUpdaterProvider.get(parameter);
+                return updater.update(arg);
             }
         }
         return arg;
@@ -355,6 +346,11 @@ class InterfaceModel {
          * @return new instance
          */
         InterfaceModel build() {
+            pathValue(restClientClass.getAnnotation(Path.class));
+            produces(restClientClass.getAnnotation(Produces.class));
+            consumes(restClientClass.getAnnotation(Consumes.class));
+            clientHeaders(restClientClass.getAnnotationsByType(ClientHeaderParam.class));
+            clientHeadersFactory(restClientClass.getAnnotation(RegisterClientHeaders.class));
             validateHeaderDuplicityNames();
             return new InterfaceModel(this);
         }

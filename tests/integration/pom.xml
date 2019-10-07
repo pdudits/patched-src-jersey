@@ -33,10 +33,12 @@
     <name>jersey-tests-integration</name>
 
     <modules>
+        <module>asm</module>
         <module>async-jersey-filter</module>
         <module>cdi-beanvalidation-webapp</module>
         <module>cdi-ejb-test-webapp</module>
         <module>cdi-iface-with-non-jaxrs-impl-test-webapp</module>
+        <module>cdi-log-check</module>
         <module>cdi-multimodule</module>
         <module>ejb-multimodule-reload</module>
         <module>cdi-multipart-webapp</module>
@@ -60,7 +62,7 @@
         <module>jersey-1928</module>
         <module>jersey-1960</module>
         <module>jersey-1964</module>
-        <module>jersey-2031</module>
+        <!--<module>jersey-2031</module>-->
         <module>jersey-2136</module>
         <module>jersey-2137</module>
         <module>jersey-2154</module>
@@ -134,6 +136,9 @@
         <!-- TODO: conflict in ASM version (too old) of jetty plugin -->
         <!--<module>spring4</module>-->
         <module>tracing-support</module>
+        <module>microprofile/config/helidon</module>
+        <module>microprofile/config/webapp</module>
+        <module>microprofile/rest-client</module>
     </modules>
 
     <profiles>

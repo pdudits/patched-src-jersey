@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -46,6 +45,7 @@ import javax.json.JsonValue;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.MatrixParam;
@@ -57,6 +57,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -83,6 +84,7 @@ class MethodModel {
     private final InterfaceModel interfaceModel;
 
     private final Method method;
+    private final GenericType<?> returnType;
     private final String httpMethod;
     private final String path;
     private final String[] produces;
@@ -100,19 +102,13 @@ class MethodModel {
      * @return
      */
     static MethodModel from(InterfaceModel interfaceModel, Method method) {
-        return new Builder(interfaceModel, method)
-                .httpMethod(parseHttpMethod(interfaceModel, method))
-                .pathValue(method.getAnnotation(Path.class))
-                .produces(method.getAnnotation(Produces.class))
-                .consumes(method.getAnnotation(Consumes.class))
-                .parameters(parameterModels(interfaceModel, method))
-                .clientHeaders(method.getAnnotationsByType(ClientHeaderParam.class))
-                .build();
+        return new Builder(interfaceModel, method).build();
     }
 
     private MethodModel(Builder builder) {
         this.method = builder.method;
         this.interfaceModel = builder.interfaceModel;
+        this.returnType = builder.returnType;
         this.httpMethod = builder.httpMethod;
         this.path = builder.pathValue;
         this.produces = builder.produces;
@@ -121,18 +117,12 @@ class MethodModel {
         this.clientHeaders = builder.clientHeaders;
         this.invocationInterceptors = builder.invocationInterceptors;
         if (httpMethod.isEmpty()) {
-            Type returnType = method.getGenericReturnType();
-            if (returnType instanceof Class) {
-                subResourceModel = RestClientModel.from((Class<?>) returnType,
-                        interfaceModel.getResponseExceptionMappers(),
-                        interfaceModel.getParamConverterProviders(),
-                        interfaceModel.getAsyncInterceptors(),
-                        interfaceModel.getInjectionManager(),
-                        interfaceModel.getBeanManager());
-            } else {
-                throw new IllegalArgumentException("Subresource represented by method " + method.getName()
-                        + " must be non-generic class");
-            }
+            subResourceModel = RestClientModel.from(returnType.getRawType(),
+                                                    interfaceModel.getResponseExceptionMappers(),
+                                                    interfaceModel.getParamConverterProviders(),
+                                                    interfaceModel.getAsyncInterceptors(),
+                                                    interfaceModel.getInjectionManager(),
+                                                    interfaceModel.getBeanManager());
         } else {
             subResourceModel = null;
         }
@@ -177,10 +167,12 @@ class MethodModel {
                 .findFirst()
                 .ifPresent(parameterModel -> entity.set(args[parameterModel.getParamPosition()]));
 
+        Form form = handleForm(args);
+
         WebTarget webTarget = webTargetAtomicReference.get();
         if (httpMethod.isEmpty()) {
             //sub resource method
-            return subResourceProxy(webTarget);
+            return subResourceProxy(webTarget, returnType.getRawType());
         }
         webTarget = addQueryParams(webTarget, args);
         webTarget = addMatrixParams(webTarget, args);
@@ -191,14 +183,30 @@ class MethodModel {
                 .headers(addCustomHeaders(args));
         builder = addCookies(builder, args);
 
+        Object entityToUse = entity.get();
+        if (entityToUse == null && !form.asMap().isEmpty()) {
+            entityToUse = form;
+        }
+
         Object response;
 
         if (CompletionStage.class.isAssignableFrom(method.getReturnType())) {
-            response = asynchronousCall(builder, entity.get(), method);
+            response = asynchronousCall(builder, entityToUse, method);
         } else {
-            response = synchronousCall(builder, entity.get(), method);
+            response = synchronousCall(builder, entityToUse, method);
         }
         return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Form handleForm(Object[] args) {
+        final Form form = new Form();
+        parameterModels.stream()
+                .filter(parameterModel -> parameterModel.handles(FormParam.class))
+                .forEach(parameterModel -> parameterModel.handleParameter(form,
+                                                                          FormParam.class,
+                                                                          args[parameterModel.getParamPosition()]));
+        return form;
     }
 
     private Object synchronousCall(Invocation.Builder builder, Object entity, Method method) {
@@ -214,17 +222,15 @@ class MethodModel {
 
         evaluateResponse(response, method);
 
-        if (method.getReturnType().equals(Void.class)) {
+        if (returnType.getType().equals(Void.class)) {
             return null;
-        } else if (method.getReturnType().equals(Response.class)) {
+        } else if (returnType.getType().equals(Response.class)) {
             return response;
         }
-        return response.readEntity(new GenericType<>(method.getGenericReturnType()));
+        return response.readEntity(returnType);
     }
 
     private CompletableFuture asynchronousCall(Invocation.Builder builder, Object entity, Method method) {
-        ParameterizedType type = (ParameterizedType) method.getGenericReturnType();
-        Type actualTypeArgument = type.getActualTypeArguments()[0]; //completionStage<actualTypeArgument>
         CompletableFuture<Object> result = new CompletableFuture<>();
         Future<Response> theFuture;
         if (entity != null
@@ -240,12 +246,12 @@ class MethodModel {
             interfaceModel.getAsyncInterceptors().forEach(AsyncInvocationInterceptor::removeContext);
             try {
                 evaluateResponse(response, method);
-                if (actualTypeArgument.equals(Void.class)) {
+                if (returnType.getType().equals(Void.class)) {
                     result.complete(null);
-                } else if (actualTypeArgument.equals(Response.class)) {
+                } else if (returnType.getType().equals(Response.class)) {
                     result.complete(response);
                 } else {
-                    result.complete(response.readEntity(new GenericType<>(actualTypeArgument)));
+                    result.complete(response.readEntity(returnType));
                 }
             } catch (Exception e) {
                 result.completeExceptionally(e);
@@ -260,10 +266,9 @@ class MethodModel {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T subResourceProxy(WebTarget webTarget) {
-        Class<?> subResourceClass = subResourceModel.getRestClientClass();
-        return (T) Proxy.newProxyInstance(subResourceClass.getClassLoader(),
-                                          new Class[] {subResourceClass},
+    private <T> T subResourceProxy(WebTarget webTarget, Class<T> subResourceType) {
+        return (T) Proxy.newProxyInstance(subResourceType.getClassLoader(),
+                                          new Class[] {subResourceType},
                                           new ProxyInvocationHandler(webTarget, subResourceModel)
         );
     }
@@ -402,9 +407,9 @@ class MethodModel {
      * Evaluation of {@link Response} if it is applicable for any of the registered {@link ResponseExceptionMapper} providers.
      *
      * @param response obtained response
-     * @param method called method
+     * @param method   called method
      */
-    void evaluateResponse(Response response, Method method) {
+    private void evaluateResponse(Response response, Method method) {
         ResponseExceptionMapper lowestMapper = null;
         Throwable throwable = null;
         for (ResponseExceptionMapper responseExceptionMapper : interfaceModel.getResponseExceptionMappers()) {
@@ -464,6 +469,7 @@ class MethodModel {
         private final InterfaceModel interfaceModel;
         private final Method method;
 
+        private GenericType<?> returnType;
         private String httpMethod;
         private String pathValue;
         private String[] produces;
@@ -502,9 +508,23 @@ class MethodModel {
                                                                               interfaceModel.getCreationalContext());
                         invocationInterceptors.add(new InterceptorInvocationContext
                                 .InvocationInterceptor(interceptorInstance,
-                                                      interceptor));
+                                                       interceptor));
                     }
                 }
+            }
+        }
+
+        /**
+         * Return type of the method.
+         *
+         * @param returnType Method return type
+         */
+        private void returnType(Type returnType) {
+            if (returnType instanceof ParameterizedType
+                    && CompletionStage.class.isAssignableFrom((Class<?>) ((ParameterizedType) returnType).getRawType())) {
+                this.returnType = new GenericType<>(((ParameterizedType) returnType).getActualTypeArguments()[0]);
+            } else {
+                this.returnType = new GenericType<>(returnType);
             }
         }
 
@@ -512,24 +532,20 @@ class MethodModel {
          * HTTP method of the method.
          *
          * @param httpMethod HTTP method of the method
-         * @return updated Builder instance
          */
-        Builder httpMethod(String httpMethod) {
+        private void httpMethod(String httpMethod) {
             this.httpMethod = httpMethod;
-            return this;
         }
 
         /**
          * Path value from {@link Path} annotation. If annotation is null, empty String is set as path.
          *
          * @param path {@link Path} annotation
-         * @return updated Builder instance
          */
-        Builder pathValue(Path path) {
+        private void pathValue(Path path) {
             this.pathValue = path != null ? path.value() : "";
             //if only / is added to path like this "localhost:80/test" it makes invalid path "localhost:80/test/"
             this.pathValue = pathValue.equals("/") ? "" : pathValue;
-            return this;
         }
 
         /**
@@ -537,11 +553,9 @@ class MethodModel {
          * If annotation is null, value from {@link InterfaceModel} is set.
          *
          * @param produces {@link Produces} annotation
-         * @return updated Builder instance
          */
-        Builder produces(Produces produces) {
+        private void produces(Produces produces) {
             this.produces = produces == null ? interfaceModel.getProduces() : produces.value();
-            return this;
         }
 
         /**
@@ -549,35 +563,29 @@ class MethodModel {
          * If annotation is null, value from {@link InterfaceModel} is set.
          *
          * @param consumes {@link Consumes} annotation
-         * @return updated Builder instance
          */
-        Builder consumes(Consumes consumes) {
+        private void consumes(Consumes consumes) {
             this.consumes = consumes == null ? interfaceModel.getConsumes() : consumes.value();
-            return this;
         }
 
         /**
          * {@link List} of transformed method parameters.
          *
          * @param parameterModels {@link List} of parameters
-         * @return updated Builder instance
          */
-        Builder parameters(List<ParamModel> parameterModels) {
+        private void parameters(List<ParamModel> parameterModels) {
             this.parameterModels = parameterModels;
-            return this;
         }
 
         /**
          * Process data from {@link ClientHeaderParam} annotation to extract methods and values.
          *
          * @param clientHeaderParams {@link ClientHeaderParam} annotations
-         * @return updated Builder instance
          */
-        Builder clientHeaders(ClientHeaderParam[] clientHeaderParams) {
+        private void clientHeaders(ClientHeaderParam[] clientHeaderParams) {
             clientHeaders = Arrays.stream(clientHeaderParams)
                     .map(clientHeaderParam -> new ClientHeaderParamModel(interfaceModel.getRestClientClass(), clientHeaderParam))
                     .collect(Collectors.toList());
-            return this;
         }
 
         /**
@@ -586,17 +594,28 @@ class MethodModel {
          * @return new instance
          */
         MethodModel build() {
+            returnType(method.getGenericReturnType());
+            httpMethod(parseHttpMethod(interfaceModel, method));
+            pathValue(method.getAnnotation(Path.class));
+            produces(method.getAnnotation(Produces.class));
+            consumes(method.getAnnotation(Consumes.class));
+            parameters(parameterModels(interfaceModel, method));
+            clientHeaders(method.getAnnotationsByType(ClientHeaderParam.class));
+
             validateParameters();
             validateHeaderDuplicityNames();
-            Optional<ParamModel> entity = parameterModels.stream()
-                    .filter(ParamModel::isEntity)
-                    .findFirst();
-            if (JsonValue.class.isAssignableFrom(method.getReturnType())
-                    || (
-                    entity.isPresent() && entity.get().getType() instanceof Class
-                            && JsonValue.class.isAssignableFrom((Class<?>) entity.get().getType()))) {
-                this.consumes = new String[] {MediaType.APPLICATION_JSON};
+
+            if (isJsonValue(returnType.getType())) {
+                this.produces = new String[] {MediaType.APPLICATION_JSON};
             }
+
+            parameterModels.stream()
+                    .filter(ParamModel::isEntity)
+                    .map(ParamModel::getType)
+                    .filter(this::isJsonValue)
+                    .findFirst()
+                    .ifPresent(paramModel -> this.consumes = new String[] {MediaType.APPLICATION_JSON});
+
             return new MethodModel(this);
         }
 
@@ -651,6 +670,10 @@ class MethodModel {
                 }
                 names.add(headerName);
             }
+        }
+
+        private boolean isJsonValue(Type type) {
+            return type instanceof Class && JsonValue.class.isAssignableFrom((Class<?>) type);
         }
     }
 }

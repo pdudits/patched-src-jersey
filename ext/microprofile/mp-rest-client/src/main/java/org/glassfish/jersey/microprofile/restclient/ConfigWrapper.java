@@ -91,7 +91,9 @@ class ConfigWrapper implements Configuration {
     @Override
     public Map<Class<?>, Integer> getContracts(Class<?> componentClass) {
         Map<Class<?>, Integer> map = new HashMap<>(jerseyBuilderConfig.getContracts(componentClass));
-        if (customProviders.containsKey(componentClass)) map.putAll(customProviders.get(componentClass));
+        if (customProviders.containsKey(componentClass)) {
+            map.putAll(customProviders.get(componentClass));
+        }
         return map;
     }
 

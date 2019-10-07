@@ -20,13 +20,13 @@ import javax.ws.rs.ConstrainedTo;
 import javax.ws.rs.RuntimeType;
 import javax.ws.rs.core.FeatureContext;
 
-import org.glassfish.jersey.internal.spi.AutoDiscoverable;
+import org.glassfish.jersey.internal.spi.ForcedAutoDiscoverable;
 
 /**
  * Auto discoverable feature to bind into jersey runtime.
  */
 @ConstrainedTo(RuntimeType.SERVER)
-public class RequestHeaderAutoDiscoverable implements AutoDiscoverable {
+public class RequestHeaderAutoDiscoverable implements ForcedAutoDiscoverable {
     @Override
     public void configure(FeatureContext context) {
         if (!context.getConfiguration().isRegistered(HeadersRequestFilter.class)) {
