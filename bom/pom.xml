@@ -201,6 +201,11 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.jersey.ext</groupId>
+                <artifactId>jersey-spring5</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.ext</groupId>
                 <artifactId>jersey-declarative-linking</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -394,6 +399,15 @@
                 <groupId>org.glassfish.copyright</groupId>
                 <artifactId>glassfish-copyright-maven-plugin</artifactId>
                 <inherited>true</inherited>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <generateProjectInfo>false</generateProjectInfo>
+                    <generateReports>true</generateReports>
+                </configuration>
             </plugin>
         </plugins>
     </build>

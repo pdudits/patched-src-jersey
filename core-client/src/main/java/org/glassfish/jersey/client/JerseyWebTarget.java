@@ -32,7 +32,7 @@ import org.glassfish.jersey.internal.inject.InjectionManager;
  * Jersey implementation of {@link javax.ws.rs.client.WebTarget JAX-RS client target}
  * contract.
  *
- * @author Marek Potociar (marek.potociar at oracle.com)
+ * @author Marek Potociar
  */
 public class JerseyWebTarget implements javax.ws.rs.client.WebTarget, Initializable<JerseyWebTarget> {
 

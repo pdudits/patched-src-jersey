@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.Json;
 import javax.json.JsonValue;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Created by David Kral.
@@ -52,6 +54,11 @@ public class ApplicationResourceImpl implements ApplicationResource {
 
     @Override
     public JsonValue jsonValue() {
+        return Json.createObjectBuilder().add("someKey", "Some value").build();
+    }
+
+    @Override
+    public String methodContentType(MediaType contentType, String entity) {
         return null;
     }
 

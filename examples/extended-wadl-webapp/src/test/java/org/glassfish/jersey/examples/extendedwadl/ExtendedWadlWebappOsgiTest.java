@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2019 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Distribution License v. 1.0, which is available at
@@ -69,8 +69,8 @@ import static org.ops4j.pax.tinybundles.core.TinyBundles.bundle;
 /**
  * @author Naresh
  * @author Miroslav Fuksa
- * @author Jakub Podlesak (jakub.podlesak at oracle.com)
- * @author Adam Lindenthal (adam.lindenthal at oracle.com)
+ * @author Jakub Podlesak
+ * @author Adam Lindenthal
  */
 @RunWith(PaxExam.class)
 public class ExtendedWadlWebappOsgiTest {
@@ -115,7 +115,7 @@ public class ExtendedWadlWebappOsgiTest {
                 mavenBundle().groupId("org.javassist").artifactId("javassist").versionAsInProject(),
 
                 // validation
-                mavenBundle().groupId("javax.validation").artifactId("validation-api").versionAsInProject(),
+                mavenBundle().groupId("jakarta.validation").artifactId("jakarta.validation-api").versionAsInProject(),
 
                 // Grizzly
                 systemPackage("sun.misc"),       // required by grizzly-framework
