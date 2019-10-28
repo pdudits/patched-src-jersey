@@ -607,6 +607,8 @@ class InvocationInterceptorStages {
         for (Throwable throwable : throwables) {
             processingException.addSuppressed(throwable);
         }
+        // add first throwable as cause for some guidance
+        processingException.initCause(throwables.peek());
         return processingException;
     }
 }
