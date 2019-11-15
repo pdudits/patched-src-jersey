@@ -86,7 +86,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
     private final ConfigWrapper configWrapper;
     private URI uri;
     private ClientBuilder clientBuilder;
-    private Supplier<ExecutorService> executorService;
+    private ExecutorService executorService;
     private HostnameVerifier sslHostnameVerifier;
     private SSLContext sslContext;
     private KeyStore sslTrustStore;
@@ -100,7 +100,6 @@ class RestClientBuilderImpl implements RestClientBuilder {
         asyncInterceptorFactories = new ArrayList<>();
         config = ConfigProvider.getConfig();
         configWrapper = new ConfigWrapper(clientBuilder.getConfiguration());
-        executorService = Executors::newCachedThreadPool;
     }
 
     @Override
@@ -130,7 +129,7 @@ class RestClientBuilderImpl implements RestClientBuilder {
         if (executor == null) {
             throw new IllegalArgumentException("ExecutorService cannot be null.");
         }
-        executorService = () -> executor;
+        executorService = executor;
         return this;
     }
 
@@ -156,7 +155,9 @@ class RestClientBuilderImpl implements RestClientBuilder {
         //sort all AsyncInvocationInterceptorFactory by priority
         asyncInterceptorFactories.sort(Comparator.comparingInt(AsyncInvocationInterceptorFactoryPriorityWrapper::getPriority));
 
-        clientBuilder.executorService(new ExecutorServiceWrapper(executorService.get()));
+        if (executorService != null) {
+            clientBuilder.executorService(executorService);
+        }
 
         if (null != sslContext) {
             clientBuilder.sslContext(sslContext);

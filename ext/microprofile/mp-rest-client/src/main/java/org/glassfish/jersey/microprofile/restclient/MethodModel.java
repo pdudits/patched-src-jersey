@@ -189,6 +189,9 @@ class MethodModel {
             customHeaders.remove(HttpHeaders.CONTENT_TYPE);
         }
 
+        boolean isAsync = CompletionStage.class.isAssignableFrom(method.getReturnType());
+        AsyncInterceptorSupport asyncSupport = AsyncInterceptorSupport.register(isAsync, interfaceModel
+                .getAsyncInterceptorFactories(), webTarget);
         Invocation.Builder builder = webTarget
                 .request(produces)
                 .property(INVOKED_METHOD, method)
@@ -197,8 +200,8 @@ class MethodModel {
 
         Object response;
 
-        if (CompletionStage.class.isAssignableFrom(method.getReturnType())) {
-            response = asynchronousCall(builder, entityToUse, method, customHeaders);
+        if (isAsync) {
+            response = asynchronousCall(builder, entityToUse, method, customHeaders, asyncSupport);
         } else {
             response = synchronousCall(builder, entityToUse, method, customHeaders);
         }
@@ -243,14 +246,8 @@ class MethodModel {
     private CompletableFuture asynchronousCall(Invocation.Builder builder,
                                                Object entity,
                                                Method method,
-                                               MultivaluedMap<String, Object> customHeaders) {
-
-        //AsyncInterceptors initialization
-        List<AsyncInvocationInterceptor> asyncInterceptors = interfaceModel.getAsyncInterceptorFactories().stream()
-                .map(AsyncInvocationInterceptorFactory::newInterceptor)
-                .collect(Collectors.toList());
-        asyncInterceptors.forEach(AsyncInvocationInterceptor::prepareContext);
-        ExecutorServiceWrapper.asyncInterceptors.set(asyncInterceptors);
+                                               MultivaluedMap<String, Object> customHeaders,
+                                               AsyncInterceptorSupport asyncSupport) {
 
         CompletableFuture<Object> result = new CompletableFuture<>();
         Future<Response> theFuture;
@@ -264,8 +261,8 @@ class MethodModel {
 
         CompletableFuture<Response> completableFuture = (CompletableFuture<Response>) theFuture;
         completableFuture.thenAccept(response -> {
-            asyncInterceptors.forEach(AsyncInvocationInterceptor::removeContext);
             try {
+                asyncSupport.postInvoke();
                 evaluateResponse(response, method);
                 if (returnType.getType().equals(Void.class)) {
                     result.complete(null);
@@ -274,19 +271,11 @@ class MethodModel {
                 } else {
                     result.complete(response.readEntity(returnType));
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 result.completeExceptionally(e);
             }
         }).exceptionally(throwable -> {
-            // Since it could have been the removeContext method causing exception, we need to be more careful
-            // to assure, that the future completes
-            asyncInterceptors.forEach(interceptor -> {
-                try {
-                    interceptor.removeContext();
-                } catch (Throwable e) {
-                    throwable.addSuppressed(e);
-                }
-            });
+            throwable = asyncSupport.postInvokeOnException(throwable);
             result.completeExceptionally(throwable);
             return null;
         });
