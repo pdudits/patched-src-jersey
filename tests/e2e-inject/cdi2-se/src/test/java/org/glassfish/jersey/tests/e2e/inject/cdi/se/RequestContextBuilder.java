@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017, 2019 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,6 +36,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.ext.RuntimeDelegate;
 import javax.ws.rs.ext.WriterInterceptor;
 
 import org.glassfish.jersey.internal.MapPropertiesDelegate;
@@ -62,7 +63,7 @@ public class RequestContextBuilder {
                                     final String method,
                                     final SecurityContext securityContext,
                                     final PropertiesDelegate propertiesDelegate) {
-            super(baseUri, requestUri, method, securityContext, propertiesDelegate, null);
+            super(baseUri, requestUri, method, securityContext, propertiesDelegate);
             this.propertiesDelegate = propertiesDelegate;
         }
 
@@ -108,6 +109,7 @@ public class RequestContextBuilder {
         }
     }
 
+    private final RuntimeDelegate delegate = RuntimeDelegate.getInstance();
     private final TestContainerRequest request;
 
     public static RequestContextBuilder from(final String requestUri, final String method) {
@@ -161,7 +163,7 @@ public class RequestContextBuilder {
     }
 
     public RequestContextBuilder type(final MediaType contentType) {
-        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, request.getConfiguration()));
+        request.getHeaders().putSingle(HttpHeaders.CONTENT_TYPE, HeaderUtils.asString(contentType, delegate));
         return this;
     }
 
@@ -185,7 +187,7 @@ public class RequestContextBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.header(name, HeaderUtils.asString(value, request.getConfiguration()));
+        request.header(name, HeaderUtils.asString(value, delegate));
     }
 
     private void putHeaders(final String name, final Object... values) {
@@ -193,7 +195,7 @@ public class RequestContextBuilder {
             request.getHeaders().remove(name);
             return;
         }
-        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), request.getConfiguration()));
+        request.getHeaders().addAll(name, HeaderUtils.asStringList(Arrays.asList(values), delegate));
     }
 
     private void putHeaders(final String name, final String... values) {

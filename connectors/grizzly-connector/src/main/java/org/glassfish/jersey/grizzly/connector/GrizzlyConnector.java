@@ -33,6 +33,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.Configuration;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.client.ClientProperties;
@@ -177,7 +178,7 @@ class GrizzlyConnector implements Connector {
     @Override
     public ClientResponse apply(final ClientRequest request) {
         final Request connectorRequest = translate(request);
-        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(request, connectorRequest);
+        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(request.getHeaders(), connectorRequest);
 
         final CompletableFuture<ClientResponse> responseFuture = new CompletableFuture<>();
         final ByteBufferInputStream entityStream = new ByteBufferInputStream();
@@ -200,8 +201,7 @@ class GrizzlyConnector implements Connector {
                     }
 
                     HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, request.getHeaders(),
-                                                   GrizzlyConnector.this.getClass().getName(),
-                                                   request.getConfiguration());
+                                                   GrizzlyConnector.this.getClass().getName());
 
                     responseFuture.complete(translate(request, this.status, headers, entityStream));
                     return STATE.CONTINUE;
@@ -242,7 +242,7 @@ class GrizzlyConnector implements Connector {
     @Override
     public Future<?> apply(final ClientRequest request, final AsyncConnectorCallback callback) {
         final Request connectorRequest = translate(request);
-        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(request, connectorRequest);
+        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(request.getHeaders(), connectorRequest);
         final ByteBufferInputStream entityStream = new ByteBufferInputStream();
         final AtomicBoolean callbackInvoked = new AtomicBoolean(false);
 
@@ -264,7 +264,7 @@ class GrizzlyConnector implements Connector {
                     }
 
                     HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, request.getHeaders(),
-                            GrizzlyConnector.this.getClass().getName(), request.getConfiguration());
+                            GrizzlyConnector.this.getClass().getName());
                     // hand-off to grizzly's application thread pool for response processing
                     processResponse(new Runnable() {
                         @Override
@@ -462,10 +462,9 @@ class GrizzlyConnector implements Connector {
         return baos.toByteArray();
     }
 
-    private static Map<String, String> writeOutBoundHeaders(final ClientRequest clientRequest,
+    private static Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers,
                                                             final com.ning.http.client.Request request) {
-        Map<String, String> stringHeaders =
-                HeaderUtils.asStringHeadersSingleValue(clientRequest.getHeaders(), clientRequest.getConfiguration());
+        Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers);
 
         for (Map.Entry<String, String> e : stringHeaders.entrySet()) {
             request.getHeaders().add(e.getKey(), e.getValue());

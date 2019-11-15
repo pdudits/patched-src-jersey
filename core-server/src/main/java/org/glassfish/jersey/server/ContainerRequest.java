@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ContainerResponseFilter;
-import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.HttpHeaders;
@@ -140,16 +139,14 @@ public class ContainerRequest extends InboundMessageContext
      *                           by the container.
      * @param propertiesDelegate custom {@link PropertiesDelegate properties delegate}
      *                           to be used by the context.
-     * @param configuration the server {@link Configuration}. If {@code null}, the default behaviour is expected.
      */
     public ContainerRequest(
             final URI baseUri,
             final URI requestUri,
             final String httpMethod,
             final SecurityContext securityContext,
-            final PropertiesDelegate propertiesDelegate,
-            final Configuration configuration) {
-        super(configuration, true);
+            final PropertiesDelegate propertiesDelegate) {
+        super(true);
 
         this.baseUri = baseUri == null ? DEFAULT_BASE_URI : baseUri.normalize();
         this.requestUri = requestUri;

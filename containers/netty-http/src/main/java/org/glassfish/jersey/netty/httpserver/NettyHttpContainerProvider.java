@@ -80,7 +80,7 @@ public class NettyHttpContainerProvider implements ContainerProvider {
             b.option(ChannelOption.SO_BACKLOG, 1024);
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
-             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, configuration));
+             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container));
 
             int port = getPort(baseUri);
 
@@ -149,7 +149,7 @@ public class NettyHttpContainerProvider implements ContainerProvider {
             b.option(ChannelOption.SO_BACKLOG, 1024);
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
-             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, configuration, true));
+             .childHandler(new JerseyServerInitializer(baseUri, sslContext, container, true));
 
             int port = getPort(baseUri);
 

@@ -41,7 +41,6 @@ import io.netty.util.concurrent.GenericFutureListener;
 import org.glassfish.jersey.internal.PropertiesDelegate;
 import org.glassfish.jersey.netty.connector.internal.NettyInputStream;
 import org.glassfish.jersey.server.ContainerRequest;
-import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.internal.ContainerUtils;
 
 /**
@@ -57,19 +56,16 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
     private final URI baseUri;
     private final LinkedBlockingDeque<InputStream> isList = new LinkedBlockingDeque<>();
     private final NettyHttpContainer container;
-    private final ResourceConfig resourceConfig;
 
     /**
      * Constructor.
      *
-     * @param baseUri         base {@link URI} of the container (includes context path, if any).
-     * @param container       Netty container implementation.
-     * @param resourceConfig  the application {@link ResourceConfig}
+     * @param baseUri   base {@link URI} of the container (includes context path, if any).
+     * @param container Netty container implementation.
      */
-    JerseyHttp2ServerHandler(URI baseUri, NettyHttpContainer container, ResourceConfig resourceConfig) {
+    JerseyHttp2ServerHandler(URI baseUri, NettyHttpContainer container) {
         this.baseUri = baseUri;
         this.container = container;
-        this.resourceConfig = resourceConfig;
     }
 
     @Override
@@ -155,7 +151,7 @@ class JerseyHttp2ServerHandler extends ChannelDuplexHandler {
                     public void removeProperty(String name) {
                         properties.remove(name);
                     }
-                }, resourceConfig);
+                });
 
         // request entity handling.
         if (!http2Headers.isEndStream()) {

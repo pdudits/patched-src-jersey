@@ -135,7 +135,7 @@ public class HeaderUtilsTest {
 
     @Test
     public void testAsStringHeaders() throws Exception {
-        assertNull(HeaderUtils.asStringHeaders(null, null));
+        assertNull(HeaderUtils.asStringHeaders(null));
 
         final AbstractMultivaluedMap<String, Object> headers = HeaderUtils.createOutbound();
 
@@ -147,7 +147,7 @@ public class HeaderUtilsTest {
 
         headers.putSingle("k3", "value3");
 
-        final MultivaluedMap<String, String> stringHeaders = HeaderUtils.asStringHeaders(headers, null);
+        final MultivaluedMap<String, String> stringHeaders = HeaderUtils.asStringHeaders(headers);
 
         // test string values
         assertEquals(Arrays.asList("value", "value2"),

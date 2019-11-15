@@ -92,16 +92,13 @@ class ClientFilteringStages {
                     final Response abortResponse = requestContext.getAbortResponse();
                     if (abortResponse != null) {
                         if (abortResponse.hasEntity() && abortResponse.getMediaType() == null) {
-                            final InboundMessageContext headerContext
-                                    = new InboundMessageContext(requestContext.getConfiguration()) {
+                            final InboundMessageContext headerContext = new InboundMessageContext() {
                                 @Override
                                 protected Iterable<ReaderInterceptor> getReaderInterceptors() {
                                     return null;
                                 }
                             };
-                            headerContext.headers(
-                                    HeaderUtils.asStringHeaders(abortResponse.getHeaders(), requestContext.getConfiguration())
-                            );
+                            headerContext.headers(HeaderUtils.asStringHeaders(abortResponse.getHeaders()));
 
                             final AbortedRequestMediaTypeDeterminer determiner = new AbortedRequestMediaTypeDeterminer(
                                     requestContext.getWorkers());

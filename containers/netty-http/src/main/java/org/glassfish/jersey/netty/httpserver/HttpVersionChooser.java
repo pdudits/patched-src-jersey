@@ -24,7 +24,6 @@ import io.netty.handler.codec.http2.Http2MultiplexCodecBuilder;
 import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.ApplicationProtocolNegotiationHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import org.glassfish.jersey.server.ResourceConfig;
 
 /**
  * Choose the handler implementation based on Http protocol.
@@ -35,28 +34,26 @@ class HttpVersionChooser extends ApplicationProtocolNegotiationHandler {
 
     private final URI baseUri;
     private final NettyHttpContainer container;
-    private final ResourceConfig resourceConfig;
 
-    HttpVersionChooser(URI baseUri, NettyHttpContainer container, ResourceConfig resourceConfig) {
+    HttpVersionChooser(URI baseUri, NettyHttpContainer container) {
         super(ApplicationProtocolNames.HTTP_1_1);
 
         this.baseUri = baseUri;
         this.container = container;
-        this.resourceConfig = resourceConfig;
     }
 
     @Override
     protected void configurePipeline(ChannelHandlerContext ctx, String protocol) throws Exception {
         if (ApplicationProtocolNames.HTTP_2.equals(protocol)) {
             ctx.pipeline().addLast(Http2MultiplexCodecBuilder.forServer(
-                        new JerseyHttp2ServerHandler(baseUri, container, resourceConfig)).build());
+                        new JerseyHttp2ServerHandler(baseUri, container)).build());
             return;
         }
 
         if (ApplicationProtocolNames.HTTP_1_1.equals(protocol)) {
             ctx.pipeline().addLast(new HttpServerCodec(),
                                    new ChunkedWriteHandler(),
-                                   new JerseyServerHandler(baseUri, container, resourceConfig));
+                                   new JerseyServerHandler(baseUri, container));
             return;
         }
 

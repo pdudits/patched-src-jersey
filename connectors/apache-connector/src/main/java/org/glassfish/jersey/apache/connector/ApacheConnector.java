@@ -456,7 +456,7 @@ class ApacheConnector implements Connector {
     @Override
     public ClientResponse apply(final ClientRequest clientRequest) throws ProcessingException {
         final HttpUriRequest request = getUriHttpRequest(clientRequest);
-        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(clientRequest, request);
+        final Map<String, String> clientHeadersSnapshot = writeOutBoundHeaders(clientRequest.getHeaders(), request);
 
         try {
             final CloseableHttpResponse response;
@@ -476,8 +476,7 @@ class ApacheConnector implements Connector {
             }
 
             response = client.execute(getHost(request), request, context);
-            HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, clientRequest.getHeaders(),
-                    this.getClass().getName(), clientRequest.getConfiguration());
+            HeaderUtils.checkHeaderChanges(clientHeadersSnapshot, clientRequest.getHeaders(), this.getClass().getName());
 
             final Response.StatusType status = response.getStatusLine().getReasonPhrase() == null
                     ? Statuses.from(response.getStatusLine().getStatusCode())
@@ -644,10 +643,9 @@ class ApacheConnector implements Connector {
         }
     }
 
-    private static Map<String, String> writeOutBoundHeaders(final ClientRequest clientRequest,
+    private static Map<String, String> writeOutBoundHeaders(final MultivaluedMap<String, Object> headers,
                                                             final HttpUriRequest request) {
-        final Map<String, String> stringHeaders =
-                HeaderUtils.asStringHeadersSingleValue(clientRequest.getHeaders(), clientRequest.getConfiguration());
+        final Map<String, String> stringHeaders = HeaderUtils.asStringHeadersSingleValue(headers);
 
         for (final Map.Entry<String, String> e : stringHeaders.entrySet()) {
             request.addHeader(e.getKey(), e.getValue());
